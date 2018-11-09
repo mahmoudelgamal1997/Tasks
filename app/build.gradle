@@ -27,5 +27,8 @@ dependencies {
     compile 'com.google.firebase:firebase-auth:9.0.2'
     compile 'com.google.firebase:firebase-database:9.0.2'
     compile 'com.google.android.gms:play-services:11.0.1'
+
+    compile 'com.firebase:geofire-java:2.3.0'
+
 }
 apply plugin: 'com.google.gms.google-services'
