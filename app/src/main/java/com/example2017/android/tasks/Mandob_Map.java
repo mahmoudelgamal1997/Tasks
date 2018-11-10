@@ -1,5 +1,7 @@
 package com.example2017.android.tasks;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -7,10 +9,21 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
+import com.firebase.ui.database.FirebaseListAdapter;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -35,6 +48,9 @@ public class Mandob_Map extends FragmentActivity implements OnMapReadyCallback, 
     private String userId;
     GoogleApiClient mgoogleclient;
     LocationRequest locationRequest;
+    ListView listView;
+    DatabaseReference tasks;
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +61,18 @@ public class Mandob_Map extends FragmentActivity implements OnMapReadyCallback, 
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
         mAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.input_search);
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        tasks = FirebaseDatabase.getInstance().getReference().child("Clients").child(userId);
+
+        LinearLayoutManager layoutManager= new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false);
+        recyclerView = (RecyclerView) findViewById(R.id.view);
+        recyclerView.setLayoutManager(layoutManager);
+
+        display();
+
 
     }
 
@@ -79,13 +106,11 @@ public class Mandob_Map extends FragmentActivity implements OnMapReadyCallback, 
         mMap.setMyLocationEnabled(true);
 
 
-
     }
 
 
-
-    protected synchronized void buildGoogleApiClients(){
-        mgoogleclient= new GoogleApiClient.Builder(this)
+    protected synchronized void buildGoogleApiClients() {
+        mgoogleclient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
@@ -132,10 +157,10 @@ public class Mandob_Map extends FragmentActivity implements OnMapReadyCallback, 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentlocation));
 
 
-        FirebaseUser isUser= FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser isUser = FirebaseAuth.getInstance().getCurrentUser();
         if (isUser != null) {
-            userId=isUser.getUid();
-            DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("CustomerRequest");
+            userId = isUser.getUid();
+            DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("ClientRequest");
             GeoFire geoFire = new GeoFire(db);
             geoFire.setLocation(userId, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
                 @Override
@@ -153,5 +178,50 @@ public class Mandob_Map extends FragmentActivity implements OnMapReadyCallback, 
     }
 
 
+    public void display() {
 
+
+        FirebaseRecyclerAdapter<ClientItem, Post_viewholder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<ClientItem, Post_viewholder>(
+                ClientItem.class,
+                R.layout.orders_cardview,
+                Post_viewholder.class,
+                tasks
+
+
+        ) {
+            @Override
+            protected void populateViewHolder(final Post_viewholder viewHolder, final ClientItem model, final int position) {
+
+                viewHolder.SetData("task "+(position+1));
+
+
+
+
+
+            }
+        };
+
+
+        recyclerView.setAdapter(firebaseRecyclerAdapter);
+
+    }
+    public static class Post_viewholder extends RecyclerView.ViewHolder {
+
+        View view;
+
+        public Post_viewholder(View itemView) {
+            super(itemView);
+            view = itemView;
+        }
+
+        public void SetData(String name) {
+
+
+            TextView taskNumber = (TextView) view.findViewById(R.id.taskNumber);
+            taskNumber.setText(name);
+
+        }
+
+
+    }
 }
