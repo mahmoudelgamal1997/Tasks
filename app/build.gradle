@@ -26,7 +26,12 @@ dependencies {
     compile 'com.google.firebase:firebase-core:9.0.2'
     compile 'com.google.firebase:firebase-auth:9.0.2'
     compile 'com.google.firebase:firebase-database:9.0.2'
-    compile 'com.google.android.gms:play-services:11.0.1'
+    compile 'com.google.android.gms:play-services:11.2.0'
+
+    compile 'com.google.android.gms:play-services-maps:11.2.0'
+    compile 'com.google.android.gms:play-services-places:11.2.0'
+    compile 'com.google.android.gms:play-services-location:11.2.0'
+    compile 'com.github.jd-alexander:library:1.1.0'
 
     compile 'com.firebase:geofire-java:2.3.0'
     compile 'com.firebaseui:firebase-ui-database:0.4.0'

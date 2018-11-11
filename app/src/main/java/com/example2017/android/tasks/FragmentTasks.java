@@ -67,6 +67,7 @@ public class FragmentTasks extends Fragment {
                         sh=getActivity().getSharedPreferences("plz", Context.MODE_PRIVATE );
                         SharedPreferences.Editor  mydata=sh.edit();
                         mydata.putString( "data",getRef(position).getKey().toString() );
+                        mydata.putString( "postion",String.valueOf(position+1));
                         mydata.commit();
 
                         FragmentDetails fragment =new FragmentDetails();

@@ -33,27 +33,39 @@ public class FragmentDetails extends Fragment {
         String  userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         details = FirebaseDatabase.getInstance().getReference().child("Clients").child(userId);
 
-        TextView taskNumber=(TextView)view.findViewById(R.id.taskNo);
-        TextView taskAdress=(TextView)view.findViewById(R.id.taskAdress);
+        final TextView taskNumber=(TextView)view.findViewById(R.id.taskNo);
+        final TextView taskAdress=(TextView)view.findViewById(R.id.taskAdress);
         final TextView taskDetails=(TextView)view.findViewById(R.id.taskdetails);
         final TextView taskState=(TextView)view.findViewById(R.id.taskState);
-        Button but =(Button)view.findViewById(R.id.but_finish);
+        final Button but =(Button)view.findViewById(R.id.but_finish);
 
-      SharedPreferences sh=getActivity().getSharedPreferences("plz", Context.MODE_PRIVATE );
+      final SharedPreferences sh=getActivity().getSharedPreferences("plz", Context.MODE_PRIVATE );
 
 
         details.child(sh.getString( "data","emputy"  )).addValueEventListener(new ValueEventListener() {
         @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
+        public void onDataChange(final DataSnapshot dataSnapshot) {
 
 
-            String state=dataSnapshot.child("state").getValue(String.class);
+            final String state=dataSnapshot.child("state").getValue(String.class);
             String TaskDetails=dataSnapshot.child("taskDetails").getValue(String.class);
+            String adress=dataSnapshot.child("adress").getValue(String.class);
+            String number = sh.getString("postion","1");
 
+            taskNumber.setText(getString(R.string.task)+number);
             taskDetails.setText(TaskDetails);
             taskState.setText(state);
+            taskAdress.setText(adress);
+            but.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-            }
+                    if (state.equalsIgnoreCase("under")){
+                        details.child(sh.getString( "data","emputy"  )).child("state").setValue("done");
+                    }
+                }
+            });
+        }
 
     @Override
     public void onCancelled(DatabaseError databaseError) {
