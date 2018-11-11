@@ -1,5 +1,7 @@
 package com.example2017.android.tasks;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -48,7 +50,6 @@ public class Mandob_Map extends FragmentActivity implements OnMapReadyCallback, 
     private String userId;
     GoogleApiClient mgoogleclient;
     LocationRequest locationRequest;
-    ListView listView;
     DatabaseReference tasks;
     RecyclerView recyclerView;
 
@@ -65,15 +66,9 @@ public class Mandob_Map extends FragmentActivity implements OnMapReadyCallback, 
 
         mAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.input_search);
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        tasks = FirebaseDatabase.getInstance().getReference().child("Clients").child(userId);
-
-        LinearLayoutManager layoutManager= new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false);
-        recyclerView = (RecyclerView) findViewById(R.id.view);
-        recyclerView.setLayoutManager(layoutManager);
-
-        display();
 
 
+            DisplayFragment();
     }
 
 
@@ -178,50 +173,17 @@ public class Mandob_Map extends FragmentActivity implements OnMapReadyCallback, 
     }
 
 
-    public void display() {
-
-
-        FirebaseRecyclerAdapter<ClientItem, Post_viewholder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<ClientItem, Post_viewholder>(
-                ClientItem.class,
-                R.layout.orders_cardview,
-                Post_viewholder.class,
-                tasks
-
-
-        ) {
-            @Override
-            protected void populateViewHolder(final Post_viewholder viewHolder, final ClientItem model, final int position) {
-
-                viewHolder.SetData("task "+(position+1));
 
 
 
 
-
-            }
-        };
-
-
-        recyclerView.setAdapter(firebaseRecyclerAdapter);
+    void DisplayFragment(){
+        FragmentTasks ft=new FragmentTasks();
+        FragmentManager fragmentManager=getFragmentManager() ;
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment,ft)
+                .commit();
 
     }
-    public static class Post_viewholder extends RecyclerView.ViewHolder {
 
-        View view;
-
-        public Post_viewholder(View itemView) {
-            super(itemView);
-            view = itemView;
-        }
-
-        public void SetData(String name) {
-
-
-            TextView taskNumber = (TextView) view.findViewById(R.id.taskNumber);
-            taskNumber.setText(name);
-
-        }
-
-
-    }
 }

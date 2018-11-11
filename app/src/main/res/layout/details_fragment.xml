@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="task number"
+        android:id="@+id/taskNo"
+        android:textSize="19dp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="task Adress"
+        android:id="@+id/taskAdress"
+        android:layout_below="@+id/taskNo"
+        android:textSize="19dp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="task dettails"
+        android:id="@+id/taskdetails"
+        android:layout_below="@+id/taskAdress"
+        android:textSize="19dp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="task state"
+        android:id="@+id/taskState"
+        android:layout_below="@+id/taskdetails"
+        android:textSize="19dp"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/but_finish"
+        android:text="finsih task"
+        android:textSize="19dp"
+        android:layout_below="@+id/taskState"
+        />
+</RelativeLayout>
