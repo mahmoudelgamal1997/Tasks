@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">المهمه</string>
+    <string name="sginin">تسجيل الدخول</string>
+    <string name="sginup">تسجيل عضويه</string>
+    <string name="task">المهمه</string>
+    <string name="title_activity_mandob__map">الخرائط</string>
 </resources>

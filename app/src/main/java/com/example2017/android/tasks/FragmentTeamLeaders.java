@@ -19,28 +19,29 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 /**
- * Created by M7moud on 11-Nov-18.
+ * Created by M7moud on 12-Nov-18.
  */
-public class FragmentTasks extends Fragment {
-    DatabaseReference tasks;
+public class FragmentTeamLeaders extends Fragment {
+
+
+    DatabaseReference tasks,teamleader;
     RecyclerView recyclerView;
     SharedPreferences sh;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v=inflater.inflate(R.layout.tasks_fragment,null);
+        View v = inflater.inflate(R.layout.tasks_fragment, null);
 
-        String  userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        tasks = FirebaseDatabase.getInstance().getReference().child("Clients").child(userId);
-
-        LinearLayoutManager layoutManager= new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL, false);
-        recyclerView = (RecyclerView)v. findViewById(R.id.view);
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        teamleader = FirebaseDatabase.getInstance().getReference().child("TeamLeader").child(userId);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView = (RecyclerView) v.findViewById(R.id.view);
         recyclerView.setLayoutManager(layoutManager);
 
         display();
 
-        return  v;
+        return v;
     }
 
     public void display() {
@@ -50,36 +51,25 @@ public class FragmentTasks extends Fragment {
                 ClientItem.class,
                 R.layout.orders_cardview,
                 Post_viewholder.class,
-                tasks
+                teamleader
 
 
         ) {
             @Override
             protected void populateViewHolder(final Post_viewholder viewHolder, final ClientItem model, final int position) {
 
-                viewHolder.SetData("task "+(position+1));
+                viewHolder.SetData(model.getName());
 
 
                 viewHolder.view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
-                        sh=getActivity().getSharedPreferences("plz", Context.MODE_PRIVATE );
-                        SharedPreferences.Editor  mydata=sh.edit();
-                        mydata.putString( "data",getRef(position).getKey().toString() );
-                        mydata.putString( "postion",String.valueOf(position+1));
-                        mydata.commit();
 
-                        FragmentDetails fragment =new FragmentDetails();
-                        FragmentManager fragmentManager = getFragmentManager();
-                        fragmentManager.beginTransaction()
-                                .addToBackStack(null)
-                                .replace(R.id.fragment, fragment)
-                                .commit();
+
 
                     }
                 });
-
 
 
             }
@@ -91,22 +81,23 @@ public class FragmentTasks extends Fragment {
     }
 
 
-public static class Post_viewholder extends RecyclerView.ViewHolder {
+    public static class Post_viewholder extends RecyclerView.ViewHolder {
 
-    View view;
+        View view;
 
-    public Post_viewholder(View itemView) {
-        super(itemView);
-        view = itemView;
+        public Post_viewholder(View itemView) {
+            super(itemView);
+            view = itemView;
+        }
+
+        public void SetData(String name) {
+
+
+            TextView leaderName = (TextView) view.findViewById(R.id.taskNumber);
+            leaderName.setText(name);
+
+        }
+
+
     }
-
-    public void SetData(String number) {
-
-
-        TextView taskNumber = (TextView) view.findViewById(R.id.taskNumber);
-        taskNumber.setText(number);
-
-    }
-
-
-}}
+}

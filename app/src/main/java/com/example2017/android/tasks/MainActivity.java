@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class MainActivity extends AppCompatActivity {
 
     EditText email,password;
-    Button login;
+    Button login,signup;
     FirebaseAuth firebaseAuth;
 
     @Override
@@ -38,11 +39,20 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
         }
 
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(MainActivity.this,SignUp.class);
+                startActivity(i);
+            }
+        });
+
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (checkInternetConnection(getApplicationContext())) {
+                if (checkInternetConnection(getApplicationContext()) && !TextUtils.isEmpty(email.getText().toString()) && !TextUtils.isEmpty(password.getText().toString())) {
+
                     String name = email.getText().toString();
                     String pass = password.getText().toString();
                     firebaseAuth.signInWithEmailAndPassword(name, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -63,8 +73,17 @@ public class MainActivity extends AppCompatActivity {
 
 
                 }else {
+                    if ( TextUtils.isEmpty(email.getText().toString()) ){
+                        Toast.makeText(MainActivity.this, "enter email", Toast.LENGTH_SHORT).show();
+
+                    }else if (TextUtils.isEmpty(email.getText().toString()))
+                    {
+                        Toast.makeText(MainActivity.this, "enter password", Toast.LENGTH_SHORT).show();
+                    }else {
                     Toast.makeText(MainActivity.this, "check Internet Connection", Toast.LENGTH_SHORT).show();
+                      }
                 }
+
             }
         });
     }
@@ -98,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         email=(EditText)findViewById(R.id.editText_email);
         password=(EditText)findViewById(R.id.editText_password);
         login=(Button) findViewById(R.id.but_login);
-
+        signup=(Button)findViewById(R.id.but_logup);
 
         firebaseAuth=FirebaseAuth.getInstance();
     }

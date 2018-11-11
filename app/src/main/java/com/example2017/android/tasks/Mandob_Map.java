@@ -12,9 +12,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -38,6 +42,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -56,6 +61,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
@@ -65,7 +71,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Mandob_Map extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, LocationListener, RoutingListener {
+public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, LocationListener, RoutingListener {
 
     private GoogleMap mMap;
     private String userId;
@@ -73,6 +79,7 @@ public class Mandob_Map extends FragmentActivity implements OnMapReadyCallback, 
     LocationRequest locationRequest;
     DatabaseReference tasks;
     RecyclerView recyclerView;
+    FusedLocationProviderClient client;
     private AutoCompleteTextView mAutoCompleteTextView;
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(new LatLng(-40,-168),new LatLng(71,163));
@@ -94,9 +101,14 @@ public class Mandob_Map extends FragmentActivity implements OnMapReadyCallback, 
         mAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.input_search);
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         polylines = new ArrayList<>();
+        client = LocationServices.getFusedLocationProviderClient(this);
 
 
+        if (userId.equalsIgnoreCase("QKnBGtEZvJfU4KWGKK68Uh0zWpp2")){
+            DisplayFragmentLeader();
+    }else {
             DisplayFragment();
+        }
     }
 
 
@@ -145,6 +157,15 @@ public class Mandob_Map extends FragmentActivity implements OnMapReadyCallback, 
                 }
 
                 return false;
+            }
+        });
+
+
+
+        client.getLastLocation().addOnSuccessListener(Mandob_Map.this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                start=new LatLng(location.getLatitude(),location.getLongitude());
             }
         });
 
@@ -236,6 +257,15 @@ public class Mandob_Map extends FragmentActivity implements OnMapReadyCallback, 
 
     }
 
+    void DisplayFragmentLeader(){
+        FragmentTeamLeaders ft=new FragmentTeamLeaders();
+        FragmentManager fragmentManager=getFragmentManager() ;
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment,ft)
+                .commit();
+
+    }
+
 
     private AdapterView.OnItemClickListener mAutoCompleteClickListener =new AdapterView.OnItemClickListener() {
         @Override
@@ -266,7 +296,6 @@ public class Mandob_Map extends FragmentActivity implements OnMapReadyCallback, 
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
             mMap.addMarker(markerOptions);
 
-            start=new LatLng(31,30);
             end=place.getLatLng();
             calculateDirections(start,place.getLatLng());
             //    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(),10));
@@ -370,4 +399,28 @@ public class Mandob_Map extends FragmentActivity implements OnMapReadyCallback, 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater menuInflater=getMenuInflater();
+        menuInflater.inflate(R.menu.item,menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId()){
+            case R.id.logout:
+
+                FirebaseAuth.getInstance().signOut();
+                Intent i =new Intent(Mandob_Map.this,MainActivity.class);
+                startActivity(i);
+
+                finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }

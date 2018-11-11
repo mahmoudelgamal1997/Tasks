@@ -2,4 +2,7 @@
     <string name="app_name">Task</string>
     <string name="title_activity_mandob__map">Map</string>
     <string name="task"> task </string>
+    <string name="sginin">sgin in</string>
+    <string name="sginup">sgin up</string>
+
 </resources>
