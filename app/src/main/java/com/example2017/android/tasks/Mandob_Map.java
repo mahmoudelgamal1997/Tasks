@@ -61,6 +61,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -112,6 +113,17 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
     }
 
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (userId.equalsIgnoreCase("QKnBGtEZvJfU4KWGKK68Uh0zWpp2")){
+            DisplayFragmentLeader();
+        }else {
+            DisplayFragment();
+        }
+    }
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -127,6 +139,9 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
 
         // Add a marker in Sydney and move the camera
 
+
+
+
         buildGoogleApiClients();
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -140,17 +155,17 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
         }
         mMap.setMyLocationEnabled(true);
 
-        mPlaceAutocompleteAdapter=new PlaceAutocompleteAdapter(this , Places.getGeoDataClient(this,null) , LAT_LNG_BOUNDS , null);
+        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(this, Places.getGeoDataClient(this, null), LAT_LNG_BOUNDS, null);
 
-        mAutoCompleteTextView .setOnItemClickListener(mAutoCompleteClickListener);
+        mAutoCompleteTextView.setOnItemClickListener(mAutoCompleteClickListener);
         mAutoCompleteTextView.setAdapter(mPlaceAutocompleteAdapter);
         mAutoCompleteTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if(actionId == EditorInfo.IME_ACTION_SEARCH
+                if (actionId == EditorInfo.IME_ACTION_SEARCH
                         || actionId == EditorInfo.IME_ACTION_DONE
                         || keyEvent.getAction() == KeyEvent.ACTION_DOWN
-                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
+                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
 
                     //execute our method for searching
                     //  geoLocate();
@@ -161,11 +176,16 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
         });
 
 
-
         client.getLastLocation().addOnSuccessListener(Mandob_Map.this, new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                start=new LatLng(location.getLatitude(),location.getLongitude());
+                start = new LatLng(location.getLatitude(), location.getLongitude());
+            }
+        }).addOnFailureListener(Mandob_Map.this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+                Toast.makeText(Mandob_Map.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -297,7 +317,9 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
             mMap.addMarker(markerOptions);
 
             end=place.getLatLng();
-            calculateDirections(start,place.getLatLng());
+            if (start!= null) {
+                calculateDirections(start, place.getLatLng());
+            }
             //    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(),10));
         }
     };

@@ -5,16 +5,26 @@ package com.example2017.android.tasks;
  */
 public class ClientItem  {
 
-String name,id,state,taskDetails;
+String name,id,state,taskDetails,ProfileImage;
 
     public ClientItem() {
     }
 
-    public ClientItem(String name, String id, String state, String taskDetails) {
+
+    public ClientItem(String name, String profileImage, String taskDetails, String state, String id) {
         this.name = name;
-        this.id = id;
-        this.state = state;
+        ProfileImage = profileImage;
         this.taskDetails = taskDetails;
+        this.state = state;
+        this.id = id;
+    }
+
+    public String getProfileImage() {
+        return ProfileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        ProfileImage = profileImage;
     }
 
     public String getName() {
