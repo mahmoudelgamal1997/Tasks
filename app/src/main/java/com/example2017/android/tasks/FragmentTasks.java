@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,7 +38,6 @@ public class FragmentTasks extends Fragment {
         LinearLayoutManager layoutManager= new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL, false);
         recyclerView = (RecyclerView)v. findViewById(R.id.view);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setHasFixedSize(true);
         display();
 
         return  v;
@@ -64,7 +64,7 @@ public class FragmentTasks extends Fragment {
             protected void populateViewHolder(final Post_viewholder viewHolder, final ClientItem model, final int position) {
 
                 viewHolder.SetData("task "+(position+1));
-
+                Toast.makeText(getActivity(), model.getName(), Toast.LENGTH_SHORT).show();
 
                 viewHolder.view.setOnClickListener(new View.OnClickListener() {
                     @Override

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -37,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
     LocationRequest mLocationRequest;
-
+    LocationManager locationManager ;
+    boolean GpsStatus ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +47,19 @@ public class MainActivity extends AppCompatActivity {
         init();
         requestPermission();
         createLocationRequest();
+
+
+            if (firebaseAuth.getCurrentUser() !=null){
+
+                Intent i=new Intent(MainActivity.this,Mandob_Map.class);
+                startActivity(i);
+                finish();
+
+                Toast.makeText(MainActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
+
+            }
+
+
 
 
         signup.setOnClickListener(new View.OnClickListener() {
@@ -212,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    protected void createLocationRequest() {
+    public  void createLocationRequest() {
 
         locationSetting();
 
@@ -263,7 +278,12 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    public void CheckGpsStatus(){
 
+        locationManager = (LocationManager)getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+
+        GpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
 
 
 

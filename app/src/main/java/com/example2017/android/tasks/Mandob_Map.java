@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -39,13 +40,18 @@ import com.firebase.geofire.GeoLocation;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
@@ -61,8 +67,10 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
@@ -79,7 +87,9 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
     GoogleApiClient mgoogleclient;
     LocationRequest locationRequest;
     DatabaseReference tasks;
-    RecyclerView recyclerView;
+    private static final int REQUEST_CHECK_SETTINGS = 0x1;
+    LocationRequest mLocationRequest;
+
     FusedLocationProviderClient client;
     private AutoCompleteTextView mAutoCompleteTextView;
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
@@ -98,12 +108,12 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         mAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.input_search);
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         polylines = new ArrayList<>();
         client = LocationServices.getFusedLocationProviderClient(this);
-
+        createLocationRequest();
 
         if (userId.equalsIgnoreCase("QKnBGtEZvJfU4KWGKK68Uh0zWpp2")){
             DisplayFragmentLeader();
@@ -175,7 +185,7 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
             }
         });
 
-
+/*
         client.getLastLocation().addOnSuccessListener(Mandob_Map.this, new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
@@ -188,7 +198,7 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
                 Toast.makeText(Mandob_Map.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
+*/
     }
 
 
@@ -242,7 +252,7 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentlocation));
 
-
+        start= currentlocation;
         FirebaseUser isUser = FirebaseAuth.getInstance().getCurrentUser();
         if (isUser != null) {
             userId = isUser.getUid();
@@ -445,4 +455,67 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
+    public void locationSetting(){
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(5000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
+
+
+    }
+
+
+    public  void createLocationRequest() {
+
+        locationSetting();
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocationRequest);
+        builder.setNeedBle(true);
+        Task<LocationSettingsResponse> result =
+                LocationServices.getSettingsClient(this).checkLocationSettings(builder.build());
+
+        result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
+            @Override
+            public void onComplete(Task<LocationSettingsResponse> task) {
+                try {
+                    LocationSettingsResponse response = task.getResult(ApiException.class);
+                    // All location settings are satisfied. The client can initialize location
+                    // requests here.
+
+                } catch (ApiException exception) {
+                    switch (exception.getStatusCode()) {
+                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                            // Location settings are not satisfied. But could be fixed by showing the
+                            // user a dialog.
+                            try {
+                                // Cast to a resolvable exception.
+                                ResolvableApiException resolvable = (ResolvableApiException) exception;
+                                // Show the dialog by calling startResolutionForResult(),
+                                // and check the result in onActivityResult().
+                                resolvable.startResolutionForResult(
+                                        Mandob_Map.this,
+                                        REQUEST_CHECK_SETTINGS);
+                            } catch (IntentSender.SendIntentException e) {
+                                // Ignore the error.
+                            } catch (ClassCastException e) {
+                                // Ignore, should be an impossible error.
+                            }
+                            break;
+                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                            // Location settings are not satisfied. However, we have no way to fix the
+                            // settings so we won't show the dialog.
+                            break;
+                    }
+                }
+            }
+        });
+
+
+    }
+
+
 }
