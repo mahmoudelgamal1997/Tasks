@@ -5,4 +5,9 @@
     <string name="sginin">sgin in</string>
     <string name="sginup">sgin up</string>
 
+    <string name="userName">User Name</string>
+    <string name="adress">adress</string>
+    <string name="missiontype">mission type</string>
+    <string name="writeReport">write Report</string>
+
 </resources>

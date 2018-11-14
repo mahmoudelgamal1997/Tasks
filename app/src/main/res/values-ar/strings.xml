@@ -4,4 +4,9 @@
     <string name="sginup">تسجيل عضويه</string>
     <string name="task">المهمه</string>
     <string name="title_activity_mandob__map">الخرائط</string>
+    <string name="adress">العنوان</string>
+    <string name="app_name">المهام</string>
+    <string name="missiontype">نوع المهمه</string>
+    <string name="userName">اسم المستخدم</string>
+    <string name="writeReport">اكتب تقرير</string>
 </resources>
