@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.client.Firebase;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -73,7 +74,7 @@ public class FragmentTeamLeaders extends Fragment {
             protected void populateViewHolder(final Post_viewholder viewHolder, final ClientItem model, final int position) {
 
                 viewHolder.SetData(model.getName());
-                Toast.makeText(getActivity(), model.getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), model.getProfileImage(), Toast.LENGTH_SHORT).show();
 
                  viewHolder.SetImage(model.getProfileImage(),getActivity());
 
@@ -131,10 +132,11 @@ public class FragmentTeamLeaders extends Fragment {
 
         public void SetImage(final String img , final Context context){
 
-            final ImageView profileImage=(ImageView)view.findViewById(R.id.leaderImage);
+            final ImageView profileImage=(ImageView)view.findViewById(R.id.leaderProfileImage);
 
+          //  Glide.with(context).load(img).dontAnimate().into(profileImage).onLoadFailed();
 
-            Picasso.with(context).load(img).placeholder(R.drawable.default_image).networkPolicy(NetworkPolicy.OFFLINE).into(profileImage, new Callback() {
+            Picasso.with(context).load(img).networkPolicy(NetworkPolicy.OFFLINE).into(profileImage, new Callback() {
                 @Override
                 public void onSuccess() {
 
@@ -143,7 +145,7 @@ public class FragmentTeamLeaders extends Fragment {
                 @Override
                 public void onError() {
 
-                    Picasso.with(context).load(img).placeholder(R.drawable.default_image).into(profileImage);
+                    Picasso.with(context).load(img).into(profileImage);
                 }
             });
 

@@ -73,9 +73,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +88,7 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
     private String userId;
     GoogleApiClient mgoogleclient;
     LocationRequest locationRequest;
-    DatabaseReference tasks;
+    DatabaseReference tasks,teamleader;
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
     LocationRequest mLocationRequest;
 
@@ -113,13 +115,28 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         polylines = new ArrayList<>();
         client = LocationServices.getFusedLocationProviderClient(this);
+
         createLocationRequest();
 
-        if (userId.equalsIgnoreCase("QKnBGtEZvJfU4KWGKK68Uh0zWpp2")){
-            DisplayFragmentLeader();
-    }else {
-            DisplayFragment();
-        }
+        teamleader=FirebaseDatabase.getInstance().getReference().child("TeamLeader");
+
+        teamleader.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.hasChild(userId.toString())){
+                    DisplayFragmentLeader();
+                }else {
+                    DisplayFragment();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
 

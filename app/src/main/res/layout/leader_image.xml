@@ -8,15 +8,15 @@
     <ImageView
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:id="@+id/leaderImage"
-        android:src="@drawable/default_image"
+        android:id="@+id/leaderProfileImage"
+
         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/leaderName"
-        android:layout_below="@+id/leaderImage"
+        android:layout_below="@+id/leaderProfileImage"
         android:layout_marginTop="10dp"
         android:textSize="18dp"
         />
