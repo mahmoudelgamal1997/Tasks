@@ -74,14 +74,7 @@ public class FragmentTeamLeaders extends Fragment {
             protected void populateViewHolder(final Post_viewholder viewHolder, final ClientItem model, final int position) {
 
                 viewHolder.SetData(model.getName());
-                Toast.makeText(getActivity(), model.getProfileImage(), Toast.LENGTH_SHORT).show();
-
-                 viewHolder.SetImage(model.getProfileImage(),getActivity());
-
-
-
-
-
+                viewHolder.SetImage(model.getProfileImage(),getActivity());
                 viewHolder.view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

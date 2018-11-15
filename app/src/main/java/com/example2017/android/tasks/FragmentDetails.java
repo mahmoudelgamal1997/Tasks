@@ -58,7 +58,7 @@ public class FragmentDetails extends Fragment {
 
             final String state=dataSnapshot.child("state").getValue(String.class);
             String TaskDetails=dataSnapshot.child("taskDetails").getValue(String.class);
-            String adress=dataSnapshot.child("adress").getValue(String.class);
+            String adress=dataSnapshot.child("ReportAdress").getValue(String.class);
             String number = sh.getString("postion","1");
 
             taskNumber.setText(getString(R.string.task)+number);
@@ -96,6 +96,11 @@ public class FragmentDetails extends Fragment {
                         temp.child("ReportAdress").setValue(mReportAdress.getText().toString());
                         temp.child("MissionType").setValue(mMissionType.getText().toString());
                         temp.child("ReportText").setValue(mReportText.getText().toString());
+
+                         if (dataSnapshot.child("state").getValue(String.class).equalsIgnoreCase("under")){
+                             temp.child("state").setValue("done");
+                         }
+
                         Toast.makeText(getActivity(), "done", Toast.LENGTH_SHORT).show();
 
                         mpopup.dismiss();
