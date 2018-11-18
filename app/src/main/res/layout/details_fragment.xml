@@ -43,5 +43,6 @@
         android:text="finsih task"
         android:textSize="19dp"
         android:layout_below="@+id/taskState"
+        android:background="@drawable/button_background"
         />
 </RelativeLayout>

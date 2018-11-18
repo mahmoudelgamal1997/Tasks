@@ -9,5 +9,6 @@
     <string name="adress">adress</string>
     <string name="missiontype">mission type</string>
     <string name="writeReport">write Report</string>
+    <string name="title_activity_admin_map">Map</string>
 
 </resources>

@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/view"
-        android:background="#00B8D4" />
+        android:background="#FF5722" />
 
 
 </RelativeLayout>

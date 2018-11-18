@@ -120,23 +120,31 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
 
         teamleader=FirebaseDatabase.getInstance().getReference().child("TeamLeader");
 
-        teamleader.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+        if (userId.equals("Sp17QHHa3vYoPh35JV2nWQ0zjFQ2")){
 
-                if (dataSnapshot.hasChild(userId.toString())){
-                    DisplayFragmentLeader();
-                }else {
-                    DisplayFragment();
+
+            Intent ii= new Intent(Mandob_Map.this,AdminMap.class);
+            startActivity(ii);
+        }else {
+
+            teamleader.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    if (dataSnapshot.hasChild(userId.toString())) {
+                        DisplayFragmentMember();
+                    } else {
+                        DisplayFragment();
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
 
+        }
     }
 
 
@@ -144,11 +152,7 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
     protected void onStart() {
         super.onStart();
 
-        if (userId.equalsIgnoreCase("QKnBGtEZvJfU4KWGKK68Uh0zWpp2")){
-            DisplayFragmentLeader();
-        }else {
-            DisplayFragment();
-        }
+
     }
 
     /**
@@ -304,7 +308,7 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
 
     }
 
-    void DisplayFragmentLeader(){
+    void DisplayFragmentMember(){
         FragmentMembers ft=new FragmentMembers();
         FragmentManager fragmentManager=getFragmentManager() ;
         fragmentManager.beginTransaction()
@@ -312,6 +316,8 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
                 .commit();
 
     }
+
+
 
 
     private AdapterView.OnItemClickListener mAutoCompleteClickListener =new AdapterView.OnItemClickListener() {
