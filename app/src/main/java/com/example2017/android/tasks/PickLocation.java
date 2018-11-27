@@ -43,7 +43,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AdminMap extends FragmentActivity implements OnMapReadyCallback, LocationListener {
+public class PickLocation extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
     private GoogleMap mMap;
     Location mlocation;
@@ -63,11 +63,9 @@ public class AdminMap extends FragmentActivity implements OnMapReadyCallback, Lo
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        // setup markers
-        this.markers = new HashMap<String, Marker>();
+
         client = LocationServices.getFusedLocationProviderClient(this);
 
-        DisplayFragmentLeader();
     }
 
 
@@ -95,96 +93,8 @@ public class AdminMap extends FragmentActivity implements OnMapReadyCallback, Lo
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        client.getLastLocation().addOnCompleteListener(AdminMap.this, new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-
-                if (task.isSuccessful()){
-                    currentPostion=  new LatLng(task.getResult().getLatitude(),task.getResult().getLongitude());
-
-                }else{
-                    Toast.makeText(AdminMap.this, "failed to get loction", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("ClientRequest");
-        final DatabaseReference Users = FirebaseDatabase.getInstance().getReference().child("username");
-        GeoFire geoFire=new GeoFire(db);
-
-        GeoQuery geoQuery= geoFire.queryAtLocation(new GeoLocation(currentPostion.latitude,currentPostion.longitude),100);
-
-        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
-            @Override
-            public void onKeyEntered(final String key, final GeoLocation location) {
-
-
-                Users.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-                        name=dataSnapshot.child(key).child("name").getValue(String.class);
-
-
-
-                        Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)));
-                        marker.setTitle(name);
-                        markers.put(key, marker);
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-            }
-
-            @Override
-            public void onKeyExited(String key) {
-
-            }
-
-            @Override
-            public void onKeyMoved(String key, GeoLocation location) {
-                // Move the marker
-                Marker marker = markers.get(key);
-                if (marker != null) {
-
-                    postion=new LatLng(location.latitude,location.longitude);
-
-                    animateMarker(marker, postion,false);
-                }
-
-
-            }
-
-
-            @Override
-            public void onGeoQueryReady() {
-
-            }
-
-            @Override
-            public void onGeoQueryError(DatabaseError error) {
-
-            }
-        });
-    }
-
-    void DisplayFragmentLeader(){
-        FragmentTeamLeaders ft=new FragmentTeamLeaders();
-        FragmentManager fragmentManager=getFragmentManager() ;
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragment,ft)
-                .commit();
 
     }
-
-
     @Override
     public void onLocationChanged(Location location) {
 
@@ -194,43 +104,8 @@ public class AdminMap extends FragmentActivity implements OnMapReadyCallback, Lo
 
     }
 
-    // Animation handler for old APIs without animation support
-    public void animateMarker(final Marker marker, final LatLng toPosition,
-                              final boolean hideMarker) {
-        final Handler handler = new Handler();
-        final long start = SystemClock.uptimeMillis();
-        Projection proj = mMap.getProjection();
-        Point startPoint = proj.toScreenLocation(marker.getPosition());
-        final LatLng startLatLng = proj.fromScreenLocation(startPoint);
-        final long duration = 500;
-        final Interpolator interpolator = new LinearInterpolator();
 
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                long elapsed = SystemClock.uptimeMillis() - start;
-                float t = interpolator.getInterpolation((float) elapsed
-                        / duration);
-                double lng = t * toPosition.longitude + (1 - t)
-                        * startLatLng.longitude;
-                double lat = t * toPosition.latitude + (1 - t)
-                        * startLatLng.latitude;
-                marker.setPosition(new LatLng(lat, lng));
-                if (t < 1.0) {
-                    // Post again 16ms later.
-                    handler.postDelayed(this, 16);
-                } else {
-                    if (hideMarker) {
 
-                        marker.setVisible(false);
-                    } else {
-
-                        marker.setVisible(true);
-                    }
-                }
-            }
-        });
-    }
 
     public  boolean checkInternetConnection(Context context)
     {

@@ -9,4 +9,17 @@
     <string name="missiontype">نوع المهمه</string>
     <string name="userName">اسم المستخدم</string>
     <string name="writeReport">اكتب تقرير</string>
+    <string name="longTime">طويل</string>
+    <string name="multi">فريق</string>
+    <string name="pickMap">تحديد مكان </string>
+    <string name="shortTime">قصير</string>
+    <string name="solo">فردي</string>
+    <string name="specialist">نوع التخصص</string>
+    <string name="taskDetails">تفاصيل المهمه</string>
+    <string name="taskDuration">وقت المهمه</string>
+    <string name="teamType">نوع الفريق</string>
+    <string name="timeFrom">من</string>
+    <string name="timeTo">الي</string>
+    <string name="title_activity_admin_map">خرائط الادمن</string>
+    <string name="title_activity_target_map">خرائط تحديد الهدف</string>
 </resources>

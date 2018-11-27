@@ -40,11 +40,13 @@ public class FragmentMembers extends Fragment {
         String  userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final SharedPreferences sh=getActivity().getSharedPreferences("plz", Context.MODE_PRIVATE );
 
+        //admin ID
         if (userId.equals("Sp17QHHa3vYoPh35JV2nWQ0zjFQ2")) {
 
             teammembers = FirebaseDatabase.getInstance().getReference().child("TeamLeader").child(sh.getString("key",userId)).child("members");
 
         }else {
+            //normal teamleader
             teammembers = FirebaseDatabase.getInstance().getReference().child("TeamLeader").child(userId).child("members");
         }
         LinearLayoutManager layoutManager= new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL, false);

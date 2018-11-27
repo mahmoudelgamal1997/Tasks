@@ -10,5 +10,16 @@
     <string name="missiontype">mission type</string>
     <string name="writeReport">write Report</string>
     <string name="title_activity_admin_map">Map</string>
+    <string name="specialist">Special type</string>
+    <string name="taskDetails">task details</string>
+    <string name="teamType">team type</string>
+    <string name="pickMap">Pick  Location</string>
+    <string name="taskDuration">task Duration</string>
+    <string name="timeFrom">From</string>
+    <string name="timeTo">To</string>
+    <string name="solo">solo</string>
+    <string name="multi">multi</string>
+    <string name="shortTime">short</string>
+    <string name="longTime">long</string>
 
 </resources>
