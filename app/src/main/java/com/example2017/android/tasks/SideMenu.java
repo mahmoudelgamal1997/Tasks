@@ -4,7 +4,10 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.location.Location;
 import android.net.ConnectivityManager;
@@ -67,6 +70,7 @@ import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class SideMenu extends AppCompatActivity
@@ -85,6 +89,8 @@ public class SideMenu extends AppCompatActivity
     ArrayAdapter<String> adapter;
    private TextView txtName,txtEmail;
   private   ImageView imageView ;
+    String languageKey ;
+    SharedPreferences sh;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,8 +104,12 @@ public class SideMenu extends AppCompatActivity
         mapFragment.getMapAsync(this);
 
 
-
-       // NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        //to set language
+         sh= getSharedPreferences("plz",MODE_PRIVATE);
+        languageKey=sh.getString("LanguageKey","en");
+        updateResources(getApplicationContext(),languageKey);
+        System.out.println("language = "+ languageKey);
+        // NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -132,30 +142,8 @@ public class SideMenu extends AppCompatActivity
             super.onBackPressed();
         }
     }
-/*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.side_menu, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-  */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -164,9 +152,28 @@ public class SideMenu extends AppCompatActivity
 
         if (id == R.id.nav_messages) {
             Toast.makeText(SideMenu.this, "messages", Toast.LENGTH_SHORT).show();
+            Intent i =new Intent(SideMenu.this,GmailWebView.class);
+            startActivity(i);
             // Handle the camera action
         } else if (id == R.id.nav_manage) {
-            Toast.makeText(SideMenu.this, "messages", Toast.LENGTH_SHORT).show();
+
+            //to change languge
+            if(languageKey.equals("en")){
+                languageKey="ar";
+                System.out.println("language ar = "+ true);
+            }else{
+
+                languageKey="en";
+                System.out.println("language en = "+ true);
+
+            }
+
+            SharedPreferences.Editor edit=sh.edit();
+            edit.putString("LanguageKey",languageKey);
+            edit.commit();
+
+            updateResources(getApplicationContext(),languageKey);
+            Toast.makeText(SideMenu.this, "تم تغير اللغه من فضلك اعد تشغيل التطبيق مره اخري ", Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.nav_logout) {
 
@@ -511,5 +518,19 @@ public class SideMenu extends AppCompatActivity
     }
 
 
+
+    private static boolean updateResources(Context context, String language) {
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+
+        Resources resources = context.getResources();
+
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+        return true;
+    }
 
 }

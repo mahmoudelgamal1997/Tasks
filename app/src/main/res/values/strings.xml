@@ -2,9 +2,9 @@
     <string name="app_name">Task</string>
     <string name="title_activity_mandob__map">Map</string>
     <string name="task"> task </string>
-    <string name="sginin"> sgin in </string>
-    <string name="sginup"> sgin up </string>
-    <string name="sginout"> sginout </string>
+    <string name="sginin"> Sign in </string>
+    <string name="sginup"> Sign up </string>
+    <string name="sginout"> Sign out </string>
 
     <string name="userName">User Name</string>
     <string name="adress">adress</string>
