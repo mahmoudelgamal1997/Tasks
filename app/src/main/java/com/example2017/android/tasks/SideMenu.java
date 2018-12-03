@@ -8,27 +8,29 @@ import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.location.Location;
 import android.net.ConnectivityManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
+import android.view.MenuInflater;
+import android.view.View;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
@@ -44,7 +46,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
@@ -54,19 +55,22 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
-import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AdminMap extends AppCompatActivity implements OnMapReadyCallback, LocationListener, NavigationView.OnNavigationItemSelectedListener {
+public class SideMenu extends AppCompatActivity
+        implements OnMapReadyCallback, LocationListener, NavigationView.OnNavigationItemSelectedListener {
 
     private GoogleMap mMap;
     Location mlocation;
@@ -79,28 +83,23 @@ public class AdminMap extends AppCompatActivity implements OnMapReadyCallback, L
     LocationRequest mLocationRequest;
     ListView listView;
     ArrayAdapter<String> adapter;
+   private TextView txtName,txtEmail;
+  private   ImageView imageView ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_map);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        setContentView(R.layout.activity_side_menu);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-
-        // setup markers
-        this.markers = new HashMap<String, Marker>();
-        client = LocationServices.getFusedLocationProviderClient(this);
-        createLocationRequest();
-
-        DisplayFragmentLeader();
-
-        RelativeLayout rr= (RelativeLayout) findViewById(R.id.mainFragment);
+       // NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -111,10 +110,80 @@ public class AdminMap extends AppCompatActivity implements OnMapReadyCallback, L
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        drawer.closeDrawer(rr);
+        View headerView = navigationView.getHeaderView(0);
+        init(headerView);
 
+        SetImage(getApplicationContext());
 
+        // setup markers
+        this.markers = new HashMap<String, Marker>();
+        client = LocationServices.getFusedLocationProviderClient(this);
+        createLocationRequest();
+
+        DisplayFragmentLeader();
     }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+/*
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.side_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+  */
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_messages) {
+            Toast.makeText(SideMenu.this, "messages", Toast.LENGTH_SHORT).show();
+            // Handle the camera action
+        } else if (id == R.id.nav_manage) {
+            Toast.makeText(SideMenu.this, "messages", Toast.LENGTH_SHORT).show();
+
+        } else if (id == R.id.nav_logout) {
+
+            FirebaseAuth.getInstance().signOut();
+            Intent i =new Intent(SideMenu.this,MainActivity.class);
+            startActivity(i);
+            Toast.makeText(SideMenu.this, "Sgined out ", Toast.LENGTH_SHORT).show();
+
+            finish();
+
+           }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
 
 
     @Override
@@ -133,11 +202,12 @@ public class AdminMap extends AppCompatActivity implements OnMapReadyCallback, L
             case R.id.logout:
 
                 FirebaseAuth.getInstance().signOut();
-                Intent i =new Intent(AdminMap.this,MainActivity.class);
+                Intent i =new Intent(SideMenu.this,MainActivity.class);
                 startActivity(i);
 
                 finish();
         }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -167,16 +237,16 @@ public class AdminMap extends AppCompatActivity implements OnMapReadyCallback, L
             return;
         }
         if (client.getLastLocation() != null) {
-            client.getLastLocation().addOnCompleteListener(AdminMap.this, new OnCompleteListener<Location>() {
+            client.getLastLocation().addOnCompleteListener(SideMenu.this, new OnCompleteListener<Location>() {
                 @Override
                 public void onComplete(@NonNull Task<Location> task) {
 
                     if (task.isSuccessful()) {
 
-                     //     currentPostion = new LatLng(task.getResult().getLatitude(), task.getResult().getLongitude());
+                        //     currentPostion = new LatLng(task.getResult().getLatitude(), task.getResult().getLongitude());
 
                     } else {
-                        Toast.makeText(AdminMap.this, "failed to get loction", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SideMenu.this, "failed to get loction", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -368,7 +438,7 @@ public class AdminMap extends AppCompatActivity implements OnMapReadyCallback, L
                                 // Show the dialog by calling startResolutionForResult(),
                                 // and check the result in onActivityResult().
                                 resolvable.startResolutionForResult(
-                                        AdminMap.this,
+                                        SideMenu.this,
                                         REQUEST_CHECK_SETTINGS);
                             } catch (IntentSender.SendIntentException e) {
                                 // Ignore the error.
@@ -389,33 +459,57 @@ public class AdminMap extends AppCompatActivity implements OnMapReadyCallback, L
     }
 
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+
+    public void init(View view){
+
+        txtName=(TextView)view.findViewById(R.id.nameHeader);
+        imageView=(ImageView) view.findViewById(R.id.imageViewHeader);
+
+
+
     }
 
 
 
 
+        private void SetImage(final Context context){
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        final DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference().child("username").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                  final String img  =dataSnapshot.child("ProfileImage").getValue(String.class);
+                  final String name  =dataSnapshot.child("name").getValue(String.class);
+
+                    txtName.setText(name);
+                    Picasso.with(context).load(img).networkPolicy(NetworkPolicy.OFFLINE).into(imageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+
+                        }
+
+                        @Override
+                        public void onError() {
+
+                            Picasso.with(context).load(img).into(imageView);
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        //  Glide.with(context).load(img).dontAnimate().into(profileImage).onLoadFailed();
 
 
 
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
+
 
 
 }

@@ -16,6 +16,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -123,8 +124,9 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
         if (userId.equals("Sp17QHHa3vYoPh35JV2nWQ0zjFQ2")){
 
 
-            Intent ii= new Intent(Mandob_Map.this,AdminMap.class);
+            Intent ii= new Intent(Mandob_Map.this,SideMenu.class);
             startActivity(ii);
+            finish();
         }else {
 
             teamleader.addValueEventListener(new ValueEventListener() {

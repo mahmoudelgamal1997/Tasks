@@ -20,6 +20,14 @@
     <string name="teamType">نوع الفريق</string>
     <string name="timeFrom">من</string>
     <string name="timeTo">الي</string>
-    <string name="title_activity_admin_map">خرائط الادمن</string>
-    <string name="title_activity_target_map">خرائط تحديد الهدف</string>
+    <string name="title_activity_admin_map">الخرائط</string>
+    <string name="title_activity_target_map">الهدف</string>
+    <string name="messages">الرسائل</string>
+    <string name="changeLanguges">تغير اللغه</string>
+    <string name="hello_blank_fragment">مرحبا</string>
+    <string name="action_settings">اعدادات</string>
+    <string name="navigation_drawer_close">اغلاق</string>
+    <string name="navigation_drawer_open">فتح</string>
+    <string name="sginout">تسجيل الخروج</string>
+
 </resources>

@@ -20,6 +20,7 @@ public  class Mission {
     String NameSelected;
     String Duration;
     LatLng latLng;
+    String TimeFrom,TimeTo;
 
     private Mission(Builder builder){
         details = builder.details;
@@ -29,7 +30,8 @@ public  class Mission {
         NameSelected = builder.NameSelected;
         latLng=builder.latLng;
         Duration=builder.Duration;
-
+        TimeFrom=builder.TimeFrom;
+        TimeTo=builder.TimeTo;
         if(key != null)
         {
             temp = data.child(key).push();
@@ -39,14 +41,25 @@ public  class Mission {
         if(details != null){ temp.child("taskDetails").setValue(details);}
         if(teamType != null){temp.child("teamType").setValue(teamType);}
         if(NameSelected != null){temp.child("name").setValue(NameSelected);}
-        if(latLng != null) {
+
+        if(latLng != null)
+        {
             temp.child("latitude").setValue(latLng.latitude);
             temp.child("longitude").setValue(latLng.longitude);
         }
 
-        if (Duration!= null){
+        if (Duration!= null)
+        {
             temp.child("TaskDuration").setValue(Duration);
         }
+
+        if (TimeFrom != null && TimeTo != null )
+        {
+            temp.child("TimeFrom").setValue(TimeTo);
+            temp.child("TimeTo").setValue(TimeTo);
+        }
+
+
         Toast.makeText(context, "Mission Added Successfully", Toast.LENGTH_SHORT).show();
     }
 
@@ -59,6 +72,7 @@ public  class Mission {
         String NameSelected;
         String Duration;
         LatLng latLng;
+        String TimeFrom,TimeTo;
 
         public Builder(String key)
         {
@@ -106,9 +120,18 @@ public  class Mission {
             return this;
         }
 
-        public Builder setDuration(String Duration){
+        public Builder setDurationType(String Duration){
 
             this.Duration=Duration;
+
+            return this;
+        }
+
+
+        public Builder setTime(String from,String to){
+
+            this.TimeFrom=from;
+            this.TimeTo=to;
 
             return this;
         }

@@ -5,7 +5,7 @@ package com.example2017.android.tasks;
  */
 public class ClientItem  {
 
-String name,id,state,taskDetails,ProfileImage;
+private  String name,id,state,taskDetails,ProfileImage;
 
     public ClientItem() {
     }

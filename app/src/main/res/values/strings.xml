@@ -2,8 +2,9 @@
     <string name="app_name">Task</string>
     <string name="title_activity_mandob__map">Map</string>
     <string name="task"> task </string>
-    <string name="sginin">sgin in</string>
-    <string name="sginup">sgin up</string>
+    <string name="sginin"> sgin in </string>
+    <string name="sginup"> sgin up </string>
+    <string name="sginout"> sginout </string>
 
     <string name="userName">User Name</string>
     <string name="adress">adress</string>
@@ -21,5 +22,23 @@
     <string name="multi">multi</string>
     <string name="shortTime">short</string>
     <string name="longTime">long</string>
+    <string name="title_activity_target_map">target map</string>
+    <string name="messages">Messages</string>
+    <string name="changeLanguges">Change Languges</string>
 
+
+    <array name="entries">
+        <item>USD</item>
+        <item>EUR</item>
+
+    </array>
+    <string name="title_activity_side_menu">SideMenu</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
