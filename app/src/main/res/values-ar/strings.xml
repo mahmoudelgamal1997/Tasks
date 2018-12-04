@@ -29,5 +29,8 @@
     <string name="navigation_drawer_close">اغلاق</string>
     <string name="navigation_drawer_open">فتح</string>
     <string name="sginout">تسجيل الخروج</string>
+    <string name="CreateTeam">تصميم فريق</string>
+    <string name="CreateTeamToast">تم انشاء فريق بنجاح</string>
+    <string name="SelectLeader">اختار قائد</string>
 
 </resources>

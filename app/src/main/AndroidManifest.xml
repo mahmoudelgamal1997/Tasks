@@ -54,7 +54,8 @@
             android:name=".SideMenu"
             android:label="@string/title_activity_side_menu"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".GmailWebView"></activity>
+        <activity android:name=".GmailWebView" />
+        <activity android:name=".CreateTeam"></activity>
     </application>
 
 </manifest>

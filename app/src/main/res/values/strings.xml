@@ -41,4 +41,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="CreateTeam">Create Team</string>
+    <string name="CreateTeamToast">Createing Team Success</string>
+    <string name="SelectLeader">Select Leader</string>
+
 </resources>

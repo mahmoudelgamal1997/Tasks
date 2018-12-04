@@ -184,7 +184,10 @@ public class SideMenu extends AppCompatActivity
 
             finish();
 
-           }
+           }else if (id == R.id.nav_create) {
+        Intent i =new Intent(SideMenu.this,CreateTeam.class);
+        startActivity(i);
+    }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -263,7 +266,7 @@ public class SideMenu extends AppCompatActivity
             final DatabaseReference Users = FirebaseDatabase.getInstance().getReference().child("username");
             GeoFire geoFire = new GeoFire(db);
 
-            GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(currentPostion.latitude, currentPostion.longitude), 100);
+            GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(currentPostion.latitude, currentPostion.longitude), 1000);
 
             geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
                 @Override
