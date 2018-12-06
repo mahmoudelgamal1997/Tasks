@@ -44,8 +44,8 @@ public  class Mission {
 
         if(latLng != null)
         {
-            temp.child("latitude").setValue(latLng.latitude);
-            temp.child("longitude").setValue(latLng.longitude);
+            temp.child("latitude").setValue(String.valueOf(latLng.latitude));
+            temp.child("longitude").setValue(String.valueOf(latLng.longitude));
         }
 
         if (Duration!= null)

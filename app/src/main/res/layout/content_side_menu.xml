@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example2017.android.tasks.SideMenu"
+    tools:context=".Admin.SideMenu"
     tools:showIn="@layout/app_bar_side_menu"
     android:id="@+id/mainFragment"
     >
@@ -17,7 +17,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="350dp"
-        tools:context="com.example2017.android.tasks.AdminMap"
+        tools:context=".Admin.AdminMap"
         />
 
     <RelativeLayout

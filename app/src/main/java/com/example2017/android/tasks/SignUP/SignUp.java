@@ -1,4 +1,4 @@
-package com.example2017.android.tasks;
+package com.example2017.android.tasks.SignUP;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example2017.android.tasks.Mandob_Map;
+import com.example2017.android.tasks.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;

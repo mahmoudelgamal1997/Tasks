@@ -64,7 +64,6 @@ public class FragmentTasks extends Fragment {
             protected void populateViewHolder(final Post_viewholder viewHolder, final ClientItem model, final int position) {
 
                 viewHolder.SetData("task "+(position+1));
-                Toast.makeText(getActivity(), model.getName(), Toast.LENGTH_SHORT).show();
 
                 viewHolder.view.setOnClickListener(new View.OnClickListener() {
                     @Override

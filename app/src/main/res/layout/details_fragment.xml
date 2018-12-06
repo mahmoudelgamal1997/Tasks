@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    >
 
 
     <TextView
@@ -17,15 +24,15 @@
         android:text="task Adress"
         android:id="@+id/taskAdress"
         android:layout_below="@+id/taskNo"
-        android:textSize="19dp"
+        android:textSize="22dp"
         />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="task dettails"
+        android:text="task details"
         android:id="@+id/taskdetails"
         android:layout_below="@+id/taskAdress"
-        android:textSize="19dp"
+        android:textSize="20dp"
         />
     <TextView
         android:layout_width="match_parent"
@@ -36,13 +43,54 @@
         android:textSize="19dp"
         />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/taskDuration"
+        android:id="@+id/taskDuration"
+        android:layout_below="@+id/taskState"
+        android:textSize="19dp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/timeFrom"
+        android:id="@+id/taskStartTime"
+        android:layout_below="@+id/taskDuration"
+        android:textSize="19dp"
+
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/timeTo"
+        android:id="@+id/taskFinishTime"
+        android:layout_below="@+id/taskStartTime"
+        android:textSize="19dp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/teamType"
+        android:id="@+id/teamType"
+        android:layout_below="@+id/taskFinishTime"
+        android:textSize="19dp"
+        />
+
+
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:id="@+id/but_finish"
         android:text="finsih task"
         android:textSize="19dp"
-        android:layout_below="@+id/taskState"
+        android:layout_below="@+id/teamType"
         android:background="@drawable/button_background"
+        android:layout_marginTop="10dp"
         />
 </RelativeLayout>
+</ScrollView>

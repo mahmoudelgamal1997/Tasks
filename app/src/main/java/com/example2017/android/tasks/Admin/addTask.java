@@ -1,4 +1,4 @@
-package com.example2017.android.tasks;
+package com.example2017.android.tasks.Admin;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -16,8 +16,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
+import com.example2017.android.tasks.ClientItem;
+import com.example2017.android.tasks.Mission;
+import com.example2017.android.tasks.R;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DatabaseReference;

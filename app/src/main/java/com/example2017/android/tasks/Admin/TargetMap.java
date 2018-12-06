@@ -1,13 +1,14 @@
-package com.example2017.android.tasks;
+package com.example2017.android.tasks.Admin;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.widget.Toast;
 
+import com.example2017.android.tasks.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -27,7 +28,7 @@ public class TargetMap extends FragmentActivity implements OnMapReadyCallback {
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
+        Toast.makeText(TargetMap.this, "Click on the map to select the place", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -67,6 +68,7 @@ public class TargetMap extends FragmentActivity implements OnMapReadyCallback {
                 mydata.putString( "pickLat", String.valueOf(latLng.latitude));
                 mydata.putString( "pickLon", String.valueOf(latLng.longitude));
                 mydata.commit();
+                Toast.makeText(TargetMap.this,"Target Place Selected", Toast.LENGTH_SHORT).show();
 
                 finish();
             }

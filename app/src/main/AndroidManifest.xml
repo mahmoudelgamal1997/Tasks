@@ -43,19 +43,22 @@
         <activity
             android:name=".Mandob_Map"
             android:label="@string/title_activity_mandob__map" />
-        <activity android:name=".SignUp" />
+        <activity android:name=".SignUP.SignUp" />
         <activity android:name=".MemberDetails" />
         <activity android:name=".TaskDetailsForMembers" />
         <activity
-            android:name=".AdminMap"
+            android:name=".Admin.AdminMap"
             android:label="@string/title_activity_admin_map" />
-        <activity android:name=".addTask" />
+        <activity android:name=".Admin.addTask" />
         <activity
-            android:name=".SideMenu"
+            android:name=".Admin.SideMenu"
             android:label="@string/title_activity_side_menu"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".GmailWebView" />
-        <activity android:name=".CreateTeam"></activity>
+        <activity android:name=".Admin.GmailWebView" />
+        <activity android:name=".Admin.CreateTeam" />
+        <activity
+            android:name=".AdressMap"
+            android:label="@string/title_activity_adress_map"></activity>
     </application>
 
 </manifest>

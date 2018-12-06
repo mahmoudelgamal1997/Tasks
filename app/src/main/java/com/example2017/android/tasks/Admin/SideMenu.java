@@ -1,4 +1,4 @@
-package com.example2017.android.tasks;
+package com.example2017.android.tasks.Admin;
 
 import android.app.FragmentManager;
 import android.content.Context;
@@ -15,8 +15,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.view.MenuInflater;
 import android.view.View;
@@ -36,6 +34,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example2017.android.tasks.FragmentTeamLeaders;
+import com.example2017.android.tasks.MainActivity;
+import com.example2017.android.tasks.R;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -58,7 +59,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -386,6 +386,8 @@ public class SideMenu extends AppCompatActivity
         });
     }
 
+
+
     public  boolean checkInternetConnection(Context context)
     {
         try
@@ -408,15 +410,12 @@ public class SideMenu extends AppCompatActivity
 
 
 
-
-
-    public void locationSetting(){
+    public void locationSetting()
+    {
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(5000);
         mLocationRequest.setFastestInterval(5000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
-
-
     }
 
     public  void createLocationRequest() {
@@ -469,18 +468,11 @@ public class SideMenu extends AppCompatActivity
     }
 
 
-
-    public void init(View view){
+        public void init(View view){
 
         txtName=(TextView)view.findViewById(R.id.nameHeader);
         imageView=(ImageView) view.findViewById(R.id.imageViewHeader);
-
-
-
     }
-
-
-
 
         private void SetImage(final Context context){
 
@@ -514,14 +506,13 @@ public class SideMenu extends AppCompatActivity
                 }
             });
 
-        //  Glide.with(context).load(img).dontAnimate().into(profileImage).onLoadFailed();
 
 
 
     }
 
 
-
+        //change language
     private static boolean updateResources(Context context, String language) {
         Locale locale = new Locale(language);
         Locale.setDefault(locale);

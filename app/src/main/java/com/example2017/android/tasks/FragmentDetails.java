@@ -3,6 +3,7 @@ package com.example2017.android.tasks;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -46,6 +47,12 @@ public class FragmentDetails extends Fragment {
         final TextView taskAdress=(TextView)view.findViewById(R.id.taskAdress);
         final TextView taskDetails=(TextView)view.findViewById(R.id.taskdetails);
         final TextView taskState=(TextView)view.findViewById(R.id.taskState);
+        final TextView txt_taskDuration=(TextView)view.findViewById(R.id.taskDuration);
+        final TextView txt_taskFrom=(TextView)view.findViewById(R.id.taskStartTime);
+        final TextView txt_taskTo=(TextView)view.findViewById(R.id.taskFinishTime);
+        final TextView txt_teamType=(TextView)view.findViewById(R.id.teamType);
+
+
         final Button but =(Button)view.findViewById(R.id.but_finish);
 
       final SharedPreferences sh=getActivity().getSharedPreferences("plz", Context.MODE_PRIVATE );
@@ -58,13 +65,40 @@ public class FragmentDetails extends Fragment {
 
             final String state=dataSnapshot.child("state").getValue(String.class);
             String TaskDetails=dataSnapshot.child("taskDetails").getValue(String.class);
-            String adress=dataSnapshot.child("ReportAdress").getValue(String.class);
+           // String adress=dataSnapshot.child("ReportAdress").getValue(String.class);
+            String teamType=dataSnapshot.child("teamType").getValue(String.class);
+            String name=dataSnapshot.child("name").getValue(String.class);
+            final String latitude =dataSnapshot.child("latitude").getValue(String.class);
+            final String longitude =dataSnapshot.child("longitude").getValue(String.class);
+            String TaskDuration=dataSnapshot.child("TaskDuration").getValue(String.class);
+            String TimeFrom=dataSnapshot.child("TimeFrom").getValue(String.class);
+            String TimeTo=dataSnapshot.child("TimeTo").getValue(String.class);
+
+
             String number = sh.getString("postion","1");
 
             taskNumber.setText(getString(R.string.task)+number);
             taskDetails.setText(TaskDetails);
             taskState.setText(state);
-            taskAdress.setText(adress);
+           // taskAdress.setText(adress);
+            txt_taskDuration.setText(TaskDuration);
+            txt_taskFrom.setText(TimeFrom);
+            txt_taskTo.setText(TimeTo);
+            txt_teamType.setText(teamType);
+
+
+            taskAdress.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Intent i = new Intent(getActivity(),AdressMap.class);
+                    i.putExtra("latit",latitude);
+                    i.putExtra("longit",longitude);
+                    startActivity(i);
+                }
+            });
+
+
             but.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

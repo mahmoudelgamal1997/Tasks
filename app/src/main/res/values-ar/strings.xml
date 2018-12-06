@@ -32,5 +32,6 @@
     <string name="CreateTeam">تصميم فريق</string>
     <string name="CreateTeamToast">تم انشاء فريق بنجاح</string>
     <string name="SelectLeader">اختار قائد</string>
+    <string name="title_activity_side_menu">القائمه الجانبيه</string>
 
 </resources>

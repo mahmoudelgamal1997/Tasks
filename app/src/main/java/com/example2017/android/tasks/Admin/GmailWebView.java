@@ -1,8 +1,10 @@
-package com.example2017.android.tasks;
+package com.example2017.android.tasks.Admin;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.webkit.WebView;
+
+import com.example2017.android.tasks.R;
 
 public class GmailWebView extends AppCompatActivity {
 
