@@ -45,5 +45,6 @@
     <string name="CreateTeamToast">Createing Team Success</string>
     <string name="SelectLeader">Select Leader</string>
     <string name="title_activity_adress_map">Map</string>
+    <string name="title_activity_mandop_side_menu">MandopSideMenu</string>
 
 </resources>

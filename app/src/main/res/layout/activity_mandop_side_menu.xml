@@ -8,10 +8,8 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-
-
     <include
-        layout="@layout/app_bar_side_menu"
+        layout="@layout/app_bar_mandop_side_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -21,7 +19,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_side_menu"
-        app:menu="@menu/activity_side_menu_drawer_admin" />
+        app:headerLayout="@layout/nav_header_mandop_side_menu"
+        app:menu="@menu/activity_mandop_side_menu_drawer" />
 
 </android.support.v4.widget.DrawerLayout>

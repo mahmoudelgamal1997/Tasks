@@ -58,7 +58,11 @@
         <activity android:name=".Admin.CreateTeam" />
         <activity
             android:name=".AdressMap"
-            android:label="@string/title_activity_adress_map"></activity>
+            android:label="@string/title_activity_adress_map" />
+        <activity
+            android:name=".Mandop.MandopSideMenu"
+            android:label="@string/title_activity_mandop_side_menu"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

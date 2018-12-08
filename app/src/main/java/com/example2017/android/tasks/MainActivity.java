@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example2017.android.tasks.Mandop.MandopSideMenu;
 import com.example2017.android.tasks.SignUP.SignUp;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (firebaseAuth.getCurrentUser() !=null){
 
-                Intent i=new Intent(MainActivity.this,Mandob_Map.class);
+                Intent i=new Intent(MainActivity.this,MandopSideMenu.class);
                 startActivity(i);
                 finish();
 
