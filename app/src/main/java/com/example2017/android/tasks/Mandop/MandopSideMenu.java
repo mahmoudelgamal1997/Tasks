@@ -1,5 +1,6 @@
 package com.example2017.android.tasks.Mandop;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.MenuInflater;
 import android.view.View;
@@ -39,7 +41,10 @@ import com.directions.route.Route;
 import com.directions.route.RouteException;
 import com.directions.route.Routing;
 import com.directions.route.RoutingListener;
+import com.example2017.android.tasks.Admin.AdminMap;
+import com.example2017.android.tasks.Admin.GmailWebView;
 import com.example2017.android.tasks.Admin.SideMenu;
+import com.example2017.android.tasks.Chat.ChatMembers;
 import com.example2017.android.tasks.FragmentMembers;
 import com.example2017.android.tasks.FragmentTasks;
 import com.example2017.android.tasks.MainActivity;
@@ -94,9 +99,9 @@ import java.util.List;
 import java.util.Locale;
 
 public class MandopSideMenu extends AppCompatActivity
-        implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, LocationListener, RoutingListener,NavigationView.OnNavigationItemSelectedListener {
+        implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, LocationListener, NavigationView.OnNavigationItemSelectedListener,MainContract.IView {
 
-    private GoogleMap mMap;
+    public GoogleMap mMap;
     private String userId;
     GoogleApiClient mgoogleclient;
     LocationRequest locationRequest;
@@ -105,7 +110,7 @@ public class MandopSideMenu extends AppCompatActivity
     LocationRequest mLocationRequest;
 
     FusedLocationProviderClient client;
-    private AutoCompleteTextView mAutoCompleteTextView;
+   // private AutoCompleteTextView mAutoCompleteTextView;
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(new LatLng(-40,-168),new LatLng(71,163));
 
@@ -139,7 +144,7 @@ public class MandopSideMenu extends AppCompatActivity
 
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        mAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.input_search);
+     //   mAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.input_search);
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         polylines = new ArrayList<>();
         client = LocationServices.getFusedLocationProviderClient(this);
@@ -148,6 +153,7 @@ public class MandopSideMenu extends AppCompatActivity
 
         teamleader= FirebaseDatabase.getInstance().getReference().child("TeamLeader");
 
+        //admin
         if (userId.equals("Sp17QHHa3vYoPh35JV2nWQ0zjFQ2")){
 
 
@@ -161,6 +167,8 @@ public class MandopSideMenu extends AppCompatActivity
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                     if (dataSnapshot.hasChild(userId.toString())) {
+                        Intent ii= new Intent(MandopSideMenu.this,AdminMap.class);
+                        startActivity(ii);
                         DisplayFragmentMember();
                     } else {
                         DisplayFragment();
@@ -234,6 +242,10 @@ public class MandopSideMenu extends AppCompatActivity
 
         if (id == R.id.nav_messages) {
             // Handle the camera action
+            Intent i =new Intent(MandopSideMenu.this,ChatMembers.class);
+            startActivity(i);
+
+        } else if (id == R.id.nav_home) {
 
 
         } else if (id == R.id.nav_manage) {
@@ -275,11 +287,6 @@ public class MandopSideMenu extends AppCompatActivity
 
 
 
-
-
-
-
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -302,25 +309,7 @@ public class MandopSideMenu extends AppCompatActivity
         }
         mMap.setMyLocationEnabled(true);
 
-        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(this, Places.getGeoDataClient(this, null), LAT_LNG_BOUNDS, null);
 
-        mAutoCompleteTextView.setOnItemClickListener(mAutoCompleteClickListener);
-        mAutoCompleteTextView.setAdapter(mPlaceAutocompleteAdapter);
-        mAutoCompleteTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH
-                        || actionId == EditorInfo.IME_ACTION_DONE
-                        || keyEvent.getAction() == KeyEvent.ACTION_DOWN
-                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
-
-                    //execute our method for searching
-                    //  geoLocate();
-                }
-
-                return false;
-            }
-        });
 
     }
 
@@ -361,6 +350,7 @@ public class MandopSideMenu extends AppCompatActivity
         LocationServices.FusedLocationApi.requestLocationUpdates(mgoogleclient, locationRequest, this);
 
 
+
     }
 
     @Override
@@ -376,6 +366,12 @@ public class MandopSideMenu extends AppCompatActivity
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentlocation));
 
         start= currentlocation;
+        SharedPreferences.Editor edit=sh.edit();
+        edit.putString("startJourneylat", String.valueOf(start.latitude));
+        edit.putString("startJourneylon", String.valueOf(start.longitude));
+        edit.commit();
+
+
         FirebaseUser isUser = FirebaseAuth.getInstance().getCurrentUser();
         if (isUser != null) {
             userId = isUser.getUid();
@@ -403,6 +399,8 @@ public class MandopSideMenu extends AppCompatActivity
 
     void DisplayFragment(){
         FragmentTasks ft=new FragmentTasks();
+
+
         FragmentManager fragmentManager=getFragmentManager() ;
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment,ft)
@@ -420,7 +418,7 @@ public class MandopSideMenu extends AppCompatActivity
     }
 
 
-
+/*
 
     private AdapterView.OnItemClickListener mAutoCompleteClickListener =new AdapterView.OnItemClickListener() {
         @Override
@@ -543,7 +541,7 @@ public class MandopSideMenu extends AppCompatActivity
 
     }
 
-
+*/
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
@@ -682,6 +680,24 @@ public class MandopSideMenu extends AppCompatActivity
     }
 
 
+    @Override
+    public void onItemClick(Activity v, LatLng start,LatLng end) {
+
+        Toast.makeText(v.getApplicationContext(), "done", Toast.LENGTH_SHORT).show();
+
+        // Start marker
+        MarkerOptions options = new MarkerOptions();
+        options.position(start);
+        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+        mMap.addMarker(options);
+
+        // End marker
+        options = new MarkerOptions();
+        options.position(end);
+        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+        mMap.addMarker(options);
 
 
+
+    }
 }

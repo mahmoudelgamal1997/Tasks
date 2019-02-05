@@ -190,7 +190,7 @@ public class addTask extends AppCompatActivity implements DatePickerDialog.OnDat
                         .setDurationType(mDurationSelected)
                         .setTime(CollectionTimeFrom,CollectionTimeTo);
                 mission.build();
-
+                finish();
 
             }
         });

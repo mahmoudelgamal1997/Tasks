@@ -33,5 +33,9 @@
     <string name="CreateTeamToast">تم انشاء فريق بنجاح</string>
     <string name="SelectLeader">اختار قائد</string>
     <string name="title_activity_side_menu">القائمه الجانبيه</string>
+    <string name="title_activity_adress_map">العنوان</string>
+    <string name="title_activity_mandop_side_menu">قائمه مندوب</string>
+    <string name="home">الرئيسيه</string>
+    <string name="createAccount">تسجيل عضويه</string>
 
 </resources>

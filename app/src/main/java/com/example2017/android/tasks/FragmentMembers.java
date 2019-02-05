@@ -87,6 +87,7 @@ public class FragmentMembers extends Fragment {
                         Intent i =new Intent(view.getContext(),MemberDetails.class);
                         startActivity(i);
 
+
                     }
                 });
 
@@ -128,6 +129,7 @@ public class FragmentMembers extends Fragment {
             Picasso.with(context).load(img).networkPolicy(NetworkPolicy.OFFLINE).into(profileImage, new Callback() {
                 @Override
                 public void onSuccess() {
+
 
                 }
 

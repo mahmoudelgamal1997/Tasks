@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="333dp"
+    android:height="456dp"
+    android:viewportWidth="333"
+    android:viewportHeight="456">
+
+    <group
+            android:translateX="-19"
+            android:translateY="-158">
+        <path
+            android:strokeAlpha=".44"
+            android:pathData="M24 606V160h323v446z" />
+        <path
+            android:strokeAlpha=".44"
+            android:pathData="M24 606V160h323v446z" />
+        <path
+            android:fillColor="#000000"
+            android:fillAlpha=".44"
+            android:pathData="M24 606V160h323v446z" />
+        <path
+            android:fillColor="#000000"
+            android:fillAlpha=".44"
+            android:pathData="M24 606V160h323v446z" />
+        <path
+            android:fillAlpha=".44"
+            android:strokeAlpha=".44"
+            android:pathData="M24 606V160h323v446z" />
+        <path
+            android:fillAlpha=".44"
+            android:strokeAlpha=".44"
+            android:pathData="M24 606V160h323v446z" />
+        <path
+            android:fillColor="#fff"
+            android:pathData="M24 606V160h323v446z" />
+        <path
+            android:fillColor="#fff"
+            android:pathData="M24 606V160h323v446z" />
+        <path
+            android:fillColor="#fff"
+            android:strokeAlpha=".44"
+            android:pathData="M24 606V160h323v446z" />
+        <path
+            android:fillColor="#fff"
+            android:strokeAlpha=".44"
+            android:pathData="M24 606V160h323v446z" />
+        <path
+            android:fillColor="#fff"
+            android:fillAlpha=".44"
+            android:pathData="M24 606V160h323v446z" />
+        <path
+            android:fillColor="#fff"
+            android:fillAlpha=".44"
+            android:pathData="M24 606V160h323v446z" />
+        <path
+            android:fillColor="#fff"
+            android:fillAlpha=".44"
+            android:strokeAlpha=".44"
+            android:pathData="M24 606V160h323v446z" />
+        <path
+            android:fillColor="#fff"
+            android:fillAlpha=".44"
+            android:strokeAlpha=".44"
+            android:pathData="M24 606V160h323v446z" />
+    </group>
+</vector>

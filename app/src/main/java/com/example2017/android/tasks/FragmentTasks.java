@@ -14,15 +14,32 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.directions.route.AbstractRouting;
+import com.directions.route.Route;
+import com.directions.route.RouteException;
+import com.directions.route.Routing;
+import com.directions.route.RoutingListener;
+import com.example2017.android.tasks.Mandop.MandopSideMenu;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by M7moud on 11-Nov-18.
  */
-public class FragmentTasks extends Fragment {
+public class FragmentTasks extends Fragment  {
     DatabaseReference tasks;
     RecyclerView recyclerView;
     SharedPreferences sh;
@@ -75,6 +92,8 @@ public class FragmentTasks extends Fragment {
                         mydata.putString( "postion",String.valueOf(position+1));
                         mydata.commit();
 
+
+
                         FragmentDetails fragment =new FragmentDetails();
                         FragmentManager fragmentManager = getFragmentManager();
                         fragmentManager.beginTransaction()
@@ -113,4 +132,10 @@ public static class Post_viewholder extends RecyclerView.ViewHolder {
     }
 
 
-}}
+}
+
+
+
+
+
+}

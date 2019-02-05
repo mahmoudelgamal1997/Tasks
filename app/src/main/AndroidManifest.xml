@@ -62,7 +62,9 @@
         <activity
             android:name=".Mandop.MandopSideMenu"
             android:label="@string/title_activity_mandop_side_menu"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".Chat.ChatMembers" />
+        <activity android:name=".Chat.ChatPrivate"></activity>
     </application>
 
 </manifest>

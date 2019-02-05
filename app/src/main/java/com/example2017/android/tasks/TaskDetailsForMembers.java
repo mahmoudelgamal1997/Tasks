@@ -1,9 +1,11 @@
 package com.example2017.android.tasks;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -16,7 +18,7 @@ public class TaskDetailsForMembers extends AppCompatActivity {
 
    private DatabaseReference memberData;
    private SharedPreferences sh;
-   private TextView adress,finishtime,state,report,details,type;
+   private TextView adress,finishtime,startTime,state,report,details, TeamType;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,11 +33,25 @@ public class TaskDetailsForMembers extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                adress.setText(dataSnapshot.child("MissionAdress").getValue(String.class));
-                finishtime.setText(dataSnapshot.child("time").getValue(String.class));
+                final String latitude =dataSnapshot.child("latitude").getValue(String.class);
+                final String longitude =dataSnapshot.child("longitude").getValue(String.class);
+
+                adress.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent i = new Intent(getApplicationContext(),AdressMap.class);
+                        i.putExtra("latit",latitude);
+                        i.putExtra("longit",longitude);
+                        startActivity(i);
+                    }
+                });
+
+
+                startTime.setText(dataSnapshot.child("TimeFrom").getValue(String.class));
+                finishtime.setText(dataSnapshot.child("TimeTo").getValue(String.class));
                 state.setText(dataSnapshot.child("state").getValue(String.class));
                 report.setText(dataSnapshot.child("ReportText").getValue(String.class));
-                type.setText(dataSnapshot.child("MissionType").getValue(String.class));
+                TeamType.setText(dataSnapshot.child("teamType").getValue(String.class));
                 details.setText(dataSnapshot.child("taskDetails").getValue(String.class));
 
 
@@ -52,12 +68,13 @@ public class TaskDetailsForMembers extends AppCompatActivity {
 
 
 public void init(){
-    adress=(TextView)findViewById(R.id.adress);
+    adress=(TextView)findViewById(R.id.Taskadress2);
+    startTime=(TextView)findViewById(R.id.startTime);
     finishtime=(TextView)findViewById(R.id.finishTime);
     state=(TextView)findViewById(R.id.state);
     report=(TextView)findViewById(R.id.taskReport);
     details=(TextView)findViewById(R.id.details);
-    type=(TextView)findViewById(R.id.type);
+    TeamType =(TextView)findViewById(R.id.type);
 
 
 }

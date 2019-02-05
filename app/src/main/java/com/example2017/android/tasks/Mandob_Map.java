@@ -27,6 +27,7 @@ import com.directions.route.Route;
 import com.directions.route.RouteException;
 import com.directions.route.Routing;
 import com.directions.route.RoutingListener;
+import com.example2017.android.tasks.Admin.AdminMap;
 import com.example2017.android.tasks.Admin.SideMenu;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -100,7 +101,7 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
         mapFragment.getMapAsync(this);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        mAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.input_search);
+      //  mAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.input_search);
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         polylines = new ArrayList<>();
         client = LocationServices.getFusedLocationProviderClient(this);
@@ -122,6 +123,11 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                     if (dataSnapshot.hasChild(userId.toString())) {
+
+                        Intent ii= new Intent(Mandob_Map.this,AdminMap.class);
+                        startActivity(ii);
+                        finish();
+
                         DisplayFragmentMember();
                     } else {
                         DisplayFragment();
@@ -176,40 +182,6 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
         }
         mMap.setMyLocationEnabled(true);
 
-        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(this, Places.getGeoDataClient(this, null), LAT_LNG_BOUNDS, null);
-
-        mAutoCompleteTextView.setOnItemClickListener(mAutoCompleteClickListener);
-        mAutoCompleteTextView.setAdapter(mPlaceAutocompleteAdapter);
-        mAutoCompleteTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH
-                        || actionId == EditorInfo.IME_ACTION_DONE
-                        || keyEvent.getAction() == KeyEvent.ACTION_DOWN
-                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
-
-                    //execute our method for searching
-                    //  geoLocate();
-                }
-
-                return false;
-            }
-        });
-
-/*
-        client.getLastLocation().addOnSuccessListener(Mandob_Map.this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                start = new LatLng(location.getLatitude(), location.getLongitude());
-            }
-        }).addOnFailureListener(Mandob_Map.this, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-                Toast.makeText(Mandob_Map.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-*/
     }
 
 
@@ -284,18 +256,12 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
 
     }
 
-
-
-
-
-
     void DisplayFragment(){
         FragmentTasks ft=new FragmentTasks();
         FragmentManager fragmentManager=getFragmentManager() ;
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment,ft)
                 .commit();
-
     }
 
     void DisplayFragmentMember(){
@@ -306,8 +272,6 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
                 .commit();
 
     }
-
-
 
 
     private AdapterView.OnItemClickListener mAutoCompleteClickListener =new AdapterView.OnItemClickListener() {

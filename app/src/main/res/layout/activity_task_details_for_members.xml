@@ -12,14 +12,15 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/adress"
+        android:id="@+id/Taskadress2"
         android:textSize="22dp"
+        android:text="@string/adress"
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/state"
-        android:layout_below="@+id/adress"
+        android:layout_below="@+id/Taskadress2"
         android:textSize="22dp"
         android:layout_marginTop="15dp"
         />
@@ -27,6 +28,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/state"
+        android:id="@+id/startTime"
+        android:textSize="22dp"
+        android:layout_marginTop="15dp"
+
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/startTime"
         android:id="@+id/finishTime"
         android:textSize="22dp"
         android:layout_marginTop="15dp"
@@ -53,8 +64,19 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/taskReport"
+        android:id="@+id/taskDuration"
         android:layout_below="@+id/details"
+        android:textSize="22dp"
+        android:layout_marginTop="15dp"
+        />
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/taskReport"
+        android:layout_below="@+id/taskDuration"
         android:textSize="22dp"
         android:layout_marginTop="15dp"
         />

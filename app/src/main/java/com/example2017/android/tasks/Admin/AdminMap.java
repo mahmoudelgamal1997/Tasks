@@ -19,18 +19,24 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example2017.android.tasks.FragmentMembers;
 import com.example2017.android.tasks.FragmentTeamLeaders;
 import com.example2017.android.tasks.MainActivity;
+import com.example2017.android.tasks.PlaceAutocompleteAdapter;
 import com.example2017.android.tasks.R;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -45,11 +51,13 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -77,18 +85,21 @@ public class AdminMap extends AppCompatActivity implements OnMapReadyCallback, L
     LocationRequest mLocationRequest;
     ListView listView;
     ArrayAdapter<String> adapter;
+    private AutoCompleteTextView mAutoCompleteTextView;
+    private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
+    private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(new LatLng(-40,-168),new LatLng(71,163));
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_map);
+        setContentView(R.layout.activity_mandob__map);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
 
         // setup markers
@@ -96,20 +107,13 @@ public class AdminMap extends AppCompatActivity implements OnMapReadyCallback, L
         client = LocationServices.getFusedLocationProviderClient(this);
         createLocationRequest();
 
-        DisplayFragmentLeader();
+
+
+     //   DisplayFragmentLeader();
+        DisplayFragmentMember();
 
         RelativeLayout rr= (RelativeLayout) findViewById(R.id.mainFragment);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        drawer.closeDrawer(rr);
 
 
     }
@@ -164,6 +168,13 @@ public class AdminMap extends AppCompatActivity implements OnMapReadyCallback, L
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+
+
+
+
+
+
+
         if (client.getLastLocation() != null) {
             client.getLastLocation().addOnCompleteListener(AdminMap.this, new OnCompleteListener<Location>() {
                 @Override
@@ -328,6 +339,11 @@ public class AdminMap extends AppCompatActivity implements OnMapReadyCallback, L
 
 
 
+
+
+
+
+
     public void locationSetting(){
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(5000);
@@ -386,33 +402,19 @@ public class AdminMap extends AppCompatActivity implements OnMapReadyCallback, L
 
     }
 
-
     @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        return false;
     }
 
 
+    void DisplayFragmentMember(){
+        FragmentMembers ft=new FragmentMembers();
+        FragmentManager fragmentManager=getFragmentManager() ;
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment,ft)
+                .commit();
 
-
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-
-
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
 
