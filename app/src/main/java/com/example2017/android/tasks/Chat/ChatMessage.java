@@ -4,7 +4,7 @@ package com.example2017.android.tasks.Chat;
  * Created by M7moud on 04-Feb-19.
  */
 public class ChatMessage {
-    String id ;
+    String from ;
     String name;
     String ProfileImage;
     String message;
@@ -13,16 +13,16 @@ public class ChatMessage {
     public ChatMessage() {
     }
 
-    public ChatMessage(String id, String name, String profileImage, String time, String message) {
-        this.id = id;
+    public ChatMessage(String from, String name, String profileImage, String time, String message) {
+        this.from = from;
         this.name = name;
         ProfileImage = profileImage;
         Time = time;
         this.message = message;
     }
 
-    public String getId() {
-        return id;
+    public String getfrom() {
+        return from;
     }
 
     public String getName() {
