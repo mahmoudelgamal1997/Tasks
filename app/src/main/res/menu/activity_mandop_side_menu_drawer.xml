@@ -10,14 +10,36 @@
             android:title="@string/home" />
 
         <item
+            android:id="@+id/nav_tasks"
+            android:icon="@drawable/tasks"
+            android:title="@string/Tasks" />
+
+
+
+        <item
             android:id="@+id/nav_messages"
             android:icon="@drawable/message"
             android:title="@string/messages" />
 
         <item
+            android:id="@+id/nav_Notifications"
+            android:icon="@drawable/notification"
+            android:title="@string/Notifications" />
+
+        <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_change"
             android:title="@string/changeLanguges" />
+
+        <item
+            android:id="@+id/nav_ShareForApp"
+            android:icon="@drawable/share"
+            android:title="@string/ShareForApp" />
+
+        <item
+            android:id="@+id/nav_Vote"
+            android:icon="@drawable/rate"
+            android:title="@string/Vote" />
 
         <item
             android:id="@+id/nav_logout"

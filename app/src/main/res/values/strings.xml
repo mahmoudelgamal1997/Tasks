@@ -14,7 +14,7 @@
     <string name="specialist">Special type</string>
     <string name="taskDetails">task details</string>
     <string name="teamType">team type</string>
-    <string name="pickMap">Pick  Location</string>
+    <string name="pickMap">Place</string>
     <string name="taskDuration">task Duration</string>
     <string name="timeFrom">From</string>
     <string name="timeTo">To</string>
@@ -43,6 +43,11 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="CreateTeam">Create Team</string>
     <string name="home">home</string>
+    <string name="Tasks">Tasks</string>
+    <string name="Notifications">Notifications</string>
+    <string name="ShareForApp">ShareForApp</string>
+    <string name="Vote">Vote</string>
+
     <string name="createAccount">Create Account</string>
     <string name="CreateTeamToast">Createing Team Success</string>
     <string name="SelectLeader">Select Leader</string>

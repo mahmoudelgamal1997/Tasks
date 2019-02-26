@@ -2,8 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/logout"
-        android:title="log out"
-        >
+    <item
+        app:actionLayout="@layout/switch_menu"
+        android:title=""
+        android:id="@+id/switch_item"
+        app:showAsAction="always">
+
     </item>
 </menu>

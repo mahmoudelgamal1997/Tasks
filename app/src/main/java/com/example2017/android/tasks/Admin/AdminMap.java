@@ -101,6 +101,8 @@ public class AdminMap extends AppCompatActivity implements OnMapReadyCallback, L
 
 
 
+        Toast.makeText(AdminMap.this, "AdminMap", Toast.LENGTH_SHORT).show();
+
 
         // setup markers
         this.markers = new HashMap<String, Marker>();
@@ -132,13 +134,7 @@ public class AdminMap extends AppCompatActivity implements OnMapReadyCallback, L
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch(item.getItemId()){
-            case R.id.logout:
 
-                FirebaseAuth.getInstance().signOut();
-                Intent i =new Intent(AdminMap.this,MainActivity.class);
-                startActivity(i);
-
-                finish();
         }
 
         return super.onOptionsItemSelected(item);

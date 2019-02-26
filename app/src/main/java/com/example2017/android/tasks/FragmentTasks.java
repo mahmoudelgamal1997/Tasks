@@ -52,7 +52,7 @@ public class FragmentTasks extends Fragment  {
         String  userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         tasks = FirebaseDatabase.getInstance().getReference().child("Clients").child(userId);
         tasks.keepSynced(true);
-        LinearLayoutManager layoutManager= new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager= new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL, false);
         recyclerView = (RecyclerView)v. findViewById(R.id.view);
         recyclerView.setLayoutManager(layoutManager);
         display();

@@ -22,6 +22,21 @@
             android:icon="@drawable/ic_menu_manage"
             android:title="@string/CreateTeam" />
 
+        <item
+            android:id="@+id/nav_Notifications"
+            android:icon="@drawable/notification"
+            android:title="@string/Notifications" />
+
+
+        <item
+            android:id="@+id/nav_ShareForApp"
+            android:icon="@drawable/share"
+            android:title="@string/ShareForApp" />
+
+        <item
+            android:id="@+id/nav_Vote"
+            android:icon="@drawable/rate"
+            android:title="@string/Vote" />
 
         <item
             android:id="@+id/nav_logout"

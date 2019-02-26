@@ -2,6 +2,7 @@ package com.example2017.android.tasks.Mandop;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -10,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +19,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ShareCompat;
 import android.view.KeyEvent;
 import android.view.MenuInflater;
 import android.view.View;
@@ -33,6 +36,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -149,10 +154,14 @@ public class MandopSideMenu extends AppCompatActivity
         polylines = new ArrayList<>();
         client = LocationServices.getFusedLocationProviderClient(this);
 
+        DatabaseReference image=FirebaseDatabase.getInstance().getReference();
+
+        SetImage(getApplicationContext(),image);
         createLocationRequest();
 
         teamleader= FirebaseDatabase.getInstance().getReference().child("TeamLeader");
 
+        Toast.makeText(MandopSideMenu.this, "MAndopSideMenu", Toast.LENGTH_SHORT).show();
         //admin
         if (userId.equals("Sp17QHHa3vYoPh35JV2nWQ0zjFQ2")){
 
@@ -186,6 +195,8 @@ public class MandopSideMenu extends AppCompatActivity
 
 
 
+
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -214,25 +225,32 @@ public class MandopSideMenu extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.mandop_side_menu, menu);
+
+        MenuInflater menuInflater=getMenuInflater();
+        menuInflater.inflate(R.menu.item,menu);
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(item.getItemId()){
+
+            case R.id.switch_item:
+                Switch s=(Switch)findViewById(R.id.switchForActionBar);
+                if (s.isChecked()){
+                    s.setChecked(false);
+                }else{
+                    s.setChecked(true);
+                }
+
         }
+
 
         return super.onOptionsItemSelected(item);
     }
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -246,6 +264,20 @@ public class MandopSideMenu extends AppCompatActivity
             startActivity(i);
 
         } else if (id == R.id.nav_home) {
+
+
+        } else if (id == R.id.nav_Vote) {
+
+            launchMarket();
+
+        }  else if (id == R.id.nav_ShareForApp){
+
+
+            ShareCompat.IntentBuilder.from(this)
+                    .setType("text/plain")
+                    .setChooserTitle("Chooser title")
+                    .setText("http://play.google.com/store/apps/details?id=" + this.getPackageName())
+                    .startChooser();
 
 
         } else if (id == R.id.nav_manage) {
@@ -308,7 +340,6 @@ public class MandopSideMenu extends AppCompatActivity
             return;
         }
         mMap.setMyLocationEnabled(true);
-
 
 
     }
@@ -417,131 +448,6 @@ public class MandopSideMenu extends AppCompatActivity
 
     }
 
-
-/*
-
-    private AdapterView.OnItemClickListener mAutoCompleteClickListener =new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            hideKeyboard();
-            final AutocompletePrediction item=mPlaceAutocompleteAdapter.getItem(i);
-
-            final String placeId=item.getPlaceId();
-
-            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mgoogleclient,placeId);
-            placeResult.setResultCallback(resultCallback);
-
-        }
-    };
-
-    private ResultCallback<PlaceBuffer> resultCallback = new ResultCallback<PlaceBuffer>() {
-        @Override
-        public void onResult(@NonNull PlaceBuffer places) {
-
-            if (!places.getStatus().isSuccess()){
-                places.release();
-                return;
-            }
-            final Place place= places.get(0) ;
-
-            MarkerOptions markerOptions=new MarkerOptions();
-            markerOptions.position(place.getLatLng());
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-            mMap.addMarker(markerOptions);
-
-            end=place.getLatLng();
-            if (start!= null) {
-                calculateDirections(start, place.getLatLng());
-            }
-            //    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(),10));
-        }
-    };
-
-
-    public void calculateDirections(LatLng start,LatLng end){
-
-        Routing routing = new Routing.Builder()
-                .travelMode(AbstractRouting.TravelMode.DRIVING)
-                .withListener(this)
-                .alternativeRoutes(true)
-                .waypoints(start, end)
-                .key("AIzaSyAT7Zm5TRyycR00208WPyAwad62mciY4dE")
-                .build();
-        routing.execute();
-
-
-
-
-
-    }
-
-    @Override
-    public void onRoutingFailure(RouteException e) {
-        Toast.makeText(MandopSideMenu.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onRoutingStart() {
-        Toast.makeText(MandopSideMenu.this, "Routing start", Toast.LENGTH_SHORT).show();
-
-    }
-
-    @Override
-    public void onRoutingSuccess(ArrayList<Route> route, int i) {
-        Toast.makeText(MandopSideMenu.this, "Routing success", Toast.LENGTH_SHORT).show();
-
-
-        CameraUpdate center = CameraUpdateFactory.newLatLng(start);
-        CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
-
-        mMap.moveCamera(center);
-
-
-        if(polylines.size()>0) {
-            for (Polyline poly : polylines) {
-                poly.remove();
-            }
-        }
-
-        polylines = new ArrayList<>();
-        //add route(s) to the map.
-        for (int ii = 0; ii <route.size(); ii++) {
-
-            //In case of more than 5 alternative routes
-            int colorIndex = ii % COLORS.length;
-
-            PolylineOptions polyOptions = new PolylineOptions();
-            polyOptions.color(getResources().getColor(COLORS[colorIndex]));
-            polyOptions.width(10 + i * 3);
-            polyOptions.addAll(route.get(i).getPoints());
-            Polyline polyline = mMap.addPolyline(polyOptions);
-            polylines.add(polyline);
-
-            Toast.makeText(getApplicationContext(),"Route "+ (i+1) +": distance - "+ route.get(i).getDistanceValue()+": duration - "+ route.get(i).getDurationValue(),Toast.LENGTH_SHORT).show();
-        }
-
-        // Start marker
-        MarkerOptions options = new MarkerOptions();
-        options.position(start);
-        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-        mMap.addMarker(options);
-
-        // End marker
-        options = new MarkerOptions();
-        options.position(end);
-        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-        mMap.addMarker(options);
-
-
-    }
-
-    @Override
-    public void onRoutingCancelled() {
-        Toast.makeText(MandopSideMenu.this, "Cancelled", Toast.LENGTH_SHORT).show();
-
-    }
-
-*/
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
@@ -700,4 +606,56 @@ public class MandopSideMenu extends AppCompatActivity
 
 
     }
+
+
+    public void SetImage( final Context context, DatabaseReference databaseReference)
+    {
+
+        final ImageView img=(ImageView)findViewById(R.id.profile_image);
+
+        databaseReference.child("username").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final String uri= dataSnapshot.child("ProfileImage").getValue(String.class);
+
+
+                Picasso.with(context).load(uri).networkPolicy(NetworkPolicy.OFFLINE).into(img, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+
+                        Picasso.with(context).load(uri).into(img);
+                    }
+                });
+
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+    }
+
+    private void launchMarket() {
+        Uri uri = Uri.parse("market://details?id=" + getPackageName());
+        Intent myAppLinkToMarket = new Intent(Intent.ACTION_VIEW, uri);
+        try {
+            startActivity(myAppLinkToMarket);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, " unable to find market app", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
 }

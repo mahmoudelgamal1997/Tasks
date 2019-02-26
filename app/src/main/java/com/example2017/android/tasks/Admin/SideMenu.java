@@ -1,6 +1,7 @@
 package com.example2017.android.tasks.Admin;
 
 import android.app.FragmentManager;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -11,12 +12,14 @@ import android.content.res.Resources;
 import android.graphics.Point;
 import android.location.Location;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ShareCompat;
 import android.view.KeyEvent;
 import android.view.MenuInflater;
 import android.view.View;
@@ -37,6 +40,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -116,8 +120,8 @@ public class SideMenu extends AppCompatActivity
     LocationRequest mLocationRequest;
     ListView listView;
     ArrayAdapter<String> adapter;
-   private TextView txtName,txtEmail;
-  private   ImageView imageView ;
+    private TextView txtName,txtEmail;
+    private   ImageView imageView ;
     String languageKey ;
     SharedPreferences sh;
 
@@ -133,6 +137,8 @@ public class SideMenu extends AppCompatActivity
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        Toast.makeText(SideMenu.this, "SideMenu", Toast.LENGTH_SHORT).show();
 
 
 
@@ -188,8 +194,29 @@ public class SideMenu extends AppCompatActivity
 
         if (id == R.id.nav_messages) {
             Toast.makeText(SideMenu.this, "messages", Toast.LENGTH_SHORT).show();
-            Intent i =new Intent(SideMenu.this,ChatMembers.class);
+            Intent i = new Intent(SideMenu.this, ChatMembers.class);
             startActivity(i);
+
+
+
+        }  else if (id == R.id.nav_ShareForApp){
+
+
+            ShareCompat.IntentBuilder.from(this)
+                    .setType("text/plain")
+                    .setChooserTitle("Chooser title")
+                    .setText("http://play.google.com/store/apps/details?id=" + this.getPackageName())
+                    .startChooser();
+
+
+
+        } else if (id == R.id.nav_Vote) {
+
+            launchMarket();
+
+
+
+
             // Handle the camera action
         } else if (id == R.id.nav_manage) {
 
@@ -245,13 +272,17 @@ public class SideMenu extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch(item.getItemId()){
-            case R.id.logout:
 
-                FirebaseAuth.getInstance().signOut();
-                Intent i =new Intent(SideMenu.this,MainActivity.class);
-                startActivity(i);
 
-                finish();
+
+            case R.id.switch_item:
+                Switch s=(Switch)findViewById(R.id.switchForActionBar);
+                    if (s.isChecked()){
+                s.setChecked(false);
+            }else{
+                s.setChecked(true);
+            }
+
         }
 
 
@@ -568,6 +599,15 @@ public class SideMenu extends AppCompatActivity
         return true;
     }
 
+    private void launchMarket() {
+        Uri uri = Uri.parse("market://details?id=" + getPackageName());
+        Intent myAppLinkToMarket = new Intent(Intent.ACTION_VIEW, uri);
+        try {
+            startActivity(myAppLinkToMarket);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, " unable to find market app", Toast.LENGTH_LONG).show();
+        }
+    }
 
 
 

@@ -1,10 +1,12 @@
 package com.example2017.android.tasks;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -19,6 +21,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +71,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +88,7 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
     LocationRequest mLocationRequest;
 
+    ImageView ProfileImage;
     FusedLocationProviderClient client;
     private AutoCompleteTextView mAutoCompleteTextView;
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
@@ -104,6 +111,12 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
       //  mAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.input_search);
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         polylines = new ArrayList<>();
+        ProfileImage=(ImageView)findViewById(R.id.profile_image);
+
+        DatabaseReference image=FirebaseDatabase.getInstance().getReference();
+        SetImage(getApplicationContext(),image);
+
+
         client = LocationServices.getFusedLocationProviderClient(this);
 
         createLocationRequest();
@@ -421,13 +434,7 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch(item.getItemId()){
-            case R.id.logout:
 
-                FirebaseAuth.getInstance().signOut();
-                Intent i =new Intent(Mandob_Map.this,MainActivity.class);
-                startActivity(i);
-
-                finish();
         }
 
         return super.onOptionsItemSelected(item);
@@ -490,6 +497,46 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
                 }
             }
         });
+
+
+    }
+
+
+    public void SetImage( final Context context, DatabaseReference databaseReference)
+    {
+
+        final ImageView img=(ImageView)findViewById(R.id.profile_image);
+
+        databaseReference.child("username").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+               final String uri= dataSnapshot.child("ProfileImage").getValue(String.class);
+
+
+                Picasso.with(context).load(uri).networkPolicy(NetworkPolicy.OFFLINE).into(img, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+
+                        Picasso.with(context).load(uri).into(img);
+                    }
+                });
+
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
 
 
     }

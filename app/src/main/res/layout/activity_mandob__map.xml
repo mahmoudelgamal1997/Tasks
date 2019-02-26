@@ -11,11 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="350dp"
         tools:context="com.example2017.android.tasks.Mandob_Map"
-
-
         />
-
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/view"
-            android:background="#FF5722" />
+            android:background="#FFFFFF" />
 
 
     </RelativeLayout>
