@@ -7,6 +7,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/view2"
-        android:background="#FF5722" />
+        android:background="#FFFFFF" />
 
 </RelativeLayout>

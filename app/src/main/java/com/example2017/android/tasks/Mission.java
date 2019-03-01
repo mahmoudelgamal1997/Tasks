@@ -15,6 +15,7 @@ public  class Mission {
     DatabaseReference temp;
     String details;
     String key;
+    String priority;
     String teamType;
     Context context;
     String NameSelected;
@@ -32,6 +33,7 @@ public  class Mission {
         Duration=builder.Duration;
         TimeFrom=builder.TimeFrom;
         TimeTo=builder.TimeTo;
+        priority=builder.priority;
         if(key != null)
         {
             temp = data.child(key).push();
@@ -59,6 +61,10 @@ public  class Mission {
             temp.child("TimeTo").setValue(TimeTo);
         }
 
+        if (priority != null){
+            temp.child("Priority").setValue(priority);
+        }
+
 
         Toast.makeText(context, "Mission Added Successfully", Toast.LENGTH_SHORT).show();
     }
@@ -70,6 +76,7 @@ public  class Mission {
         Context context;
         String teamType;
         String NameSelected;
+        String priority;
         String Duration;
         LatLng latLng;
         String TimeFrom,TimeTo;
@@ -100,6 +107,13 @@ public  class Mission {
         public Builder getContext(Context context){
 
             this.context=context;
+
+            return this;
+        }
+
+        public Builder setPriority(String priority){
+
+            this.priority=priority;
 
             return this;
         }

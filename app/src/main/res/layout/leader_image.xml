@@ -6,19 +6,34 @@
     >
 
     <ImageView
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:id="@+id/leaderProfileImage"
-
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/taskImage"
+        android:src="@drawable/shape"
+        android:layout_marginLeft="5dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="30dp"
         />
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/user_profile_image"
+        android:src="@drawable/user_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:civ_border_width="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        app:civ_border_color="#FF000000"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/leaderName"
-        android:layout_below="@+id/leaderProfileImage"
-        android:layout_marginTop="10dp"
-        android:textSize="18dp"
-        android:paddingLeft="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/user_profile_image"
+        android:textSize="17dp"
+        android:text="leaderName"
+
         />
 </RelativeLayout>

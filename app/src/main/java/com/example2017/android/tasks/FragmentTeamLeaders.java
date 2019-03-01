@@ -50,7 +50,7 @@ public class FragmentTeamLeaders extends Fragment {
         teamleader.keepSynced(true);
 
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView = (RecyclerView) v.findViewById(R.id.view2);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -125,7 +125,7 @@ public class FragmentTeamLeaders extends Fragment {
 
         public void SetImage(final String img , final Context context){
 
-            final ImageView profileImage=(ImageView)view.findViewById(R.id.leaderProfileImage);
+            final ImageView profileImage=(ImageView)view.findViewById(R.id.user_profile_image);
 
           //  Glide.with(context).load(img).dontAnimate().into(profileImage).onLoadFailed();
 

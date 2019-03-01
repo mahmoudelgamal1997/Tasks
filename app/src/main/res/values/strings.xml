@@ -25,6 +25,10 @@
     <string name="title_activity_target_map">target map</string>
     <string name="messages">Messages</string>
     <string name="changeLanguges">Change Languges</string>
+    <string name="prority">priority</string>
+    <string name="high">high</string>
+    <string name="medium">medium</string>
+    <string name="low">low</string>
 
 
     <array name="entries">

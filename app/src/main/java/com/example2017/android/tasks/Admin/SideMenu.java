@@ -38,6 +38,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Switch;
@@ -52,6 +53,7 @@ import com.directions.route.RoutingListener;
 import com.example2017.android.tasks.Chat.ChatMembers;
 import com.example2017.android.tasks.FragmentTeamLeaders;
 import com.example2017.android.tasks.MainActivity;
+import com.example2017.android.tasks.Mandop.MandopSideMenu;
 import com.example2017.android.tasks.PlaceAutocompleteAdapter;
 import com.example2017.android.tasks.R;
 import com.firebase.geofire.GeoFire;
@@ -112,7 +114,7 @@ public class SideMenu extends AppCompatActivity
     private GoogleMap mMap;
     Location mlocation;
     private LatLng postion;
-    LatLng currentPostion = new LatLng(29.975051,31.287913);
+    LatLng currentPostion = new LatLng(29.975051, 31.287913);
     String name;
     private Map<String, Marker> markers;
     FusedLocationProviderClient client;
@@ -120,10 +122,11 @@ public class SideMenu extends AppCompatActivity
     LocationRequest mLocationRequest;
     ListView listView;
     ArrayAdapter<String> adapter;
-    private TextView txtName,txtEmail;
-    private   ImageView imageView ;
-    String languageKey ;
+    private TextView txtName, txtEmail;
+    private ImageView imageView;
+    String languageKey;
     SharedPreferences sh;
+    private String userId;
 
 
     @Override
@@ -140,15 +143,17 @@ public class SideMenu extends AppCompatActivity
 
         Toast.makeText(SideMenu.this, "SideMenu", Toast.LENGTH_SHORT).show();
 
+        DatabaseReference image=FirebaseDatabase.getInstance().getReference();
 
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        //to set language
-         sh= getSharedPreferences("plz",MODE_PRIVATE);
-        languageKey=sh.getString("LanguageKey","en");
-        updateResources(getApplicationContext(),languageKey);
-        System.out.println("language = "+ languageKey);
+        SetImage(getApplicationContext(),image);
+                //to set language
+                sh = getSharedPreferences("plz", MODE_PRIVATE);
+        languageKey = sh.getString("LanguageKey", "en");
+        updateResources(getApplicationContext(), languageKey);
+        System.out.println("language = " + languageKey);
         // NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
 
 
         client = LocationServices.getFusedLocationProviderClient(this);
@@ -198,8 +203,7 @@ public class SideMenu extends AppCompatActivity
             startActivity(i);
 
 
-
-        }  else if (id == R.id.nav_ShareForApp){
+        } else if (id == R.id.nav_ShareForApp) {
 
 
             ShareCompat.IntentBuilder.from(this)
@@ -209,48 +213,45 @@ public class SideMenu extends AppCompatActivity
                     .startChooser();
 
 
-
         } else if (id == R.id.nav_Vote) {
 
             launchMarket();
-
-
 
 
             // Handle the camera action
         } else if (id == R.id.nav_manage) {
 
             //to change languge
-            if(languageKey.equals("en")){
-                languageKey="ar";
-                System.out.println("language ar = "+ true);
-            }else{
+            if (languageKey.equals("en")) {
+                languageKey = "ar";
+                System.out.println("language ar = " + true);
+            } else {
 
-                languageKey="en";
-                System.out.println("language en = "+ true);
+                languageKey = "en";
+                System.out.println("language en = " + true);
 
             }
 
-            SharedPreferences.Editor edit=sh.edit();
-            edit.putString("LanguageKey",languageKey);
+            SharedPreferences.Editor edit = sh.edit();
+            edit.putString("LanguageKey", languageKey);
             edit.commit();
 
-            updateResources(getApplicationContext(),languageKey);
+            updateResources(getApplicationContext(), languageKey);
             Toast.makeText(SideMenu.this, "تم تغير اللغه من فضلك اعد تشغيل التطبيق مره اخري ", Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.nav_logout) {
 
             FirebaseAuth.getInstance().signOut();
-            Intent i =new Intent(SideMenu.this,MainActivity.class);
+            Intent i = new Intent(SideMenu.this, MainActivity.class);
             startActivity(i);
             Toast.makeText(SideMenu.this, "Sgined out ", Toast.LENGTH_SHORT).show();
 
             finish();
 
-           }else if (id == R.id.nav_create) {
-        Intent i =new Intent(SideMenu.this,CreateTeam.class);
-        startActivity(i);
-    }
+        } else if (id == R.id.nav_create) {
+            Intent i = new Intent(SideMenu.this, CreateTeam.class);
+            startActivity(i);
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -258,12 +259,11 @@ public class SideMenu extends AppCompatActivity
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        MenuInflater menuInflater=getMenuInflater();
-        menuInflater.inflate(R.menu.item,menu);
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.item, menu);
 
         return true;
     }
@@ -271,17 +271,31 @@ public class SideMenu extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch(item.getItemId()){
-
+        switch (item.getItemId()) {
 
 
             case R.id.switch_item:
                 Switch s=(Switch)findViewById(R.id.switchForActionBar);
-                    if (s.isChecked()){
-                s.setChecked(false);
-            }else{
-                s.setChecked(true);
-            }
+                final SharedPreferences.Editor editor=sh.edit();
+
+
+                s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+
+                        if (b==true){
+                            editor.putBoolean("switch",false);
+                            Toast.makeText(SideMenu.this, "false", Toast.LENGTH_SHORT).show();
+
+                        }else{
+                            editor.putBoolean("switch",true);
+                            Toast.makeText(SideMenu.this, "True", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                });
+
 
         }
 
@@ -327,7 +341,6 @@ public class SideMenu extends AppCompatActivity
                     }
                 }
             });
-
 
 
             DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("ClientRequest");
@@ -397,14 +410,11 @@ public class SideMenu extends AppCompatActivity
     }
 
 
-
-
-
-    void DisplayFragmentLeader(){
-        FragmentTeamLeaders ft=new FragmentTeamLeaders();
-        FragmentManager fragmentManager=getFragmentManager() ;
+    void DisplayFragmentLeader() {
+        FragmentTeamLeaders ft = new FragmentTeamLeaders();
+        FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.fragment,ft)
+                .replace(R.id.fragment, ft)
                 .commit();
 
     }
@@ -413,8 +423,7 @@ public class SideMenu extends AppCompatActivity
     @Override
     public void onLocationChanged(Location location) {
 
-        currentPostion=new LatLng(location.getLatitude(),location.getLongitude());
-
+        currentPostion = new LatLng(location.getLatitude(), location.getLongitude());
 
 
     }
@@ -458,20 +467,15 @@ public class SideMenu extends AppCompatActivity
     }
 
 
-
-    public  boolean checkInternetConnection(Context context)
-    {
-        try
-        {
+    public boolean checkInternetConnection(Context context) {
+        try {
             ConnectivityManager conMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
             if (conMgr.getActiveNetworkInfo() != null && conMgr.getActiveNetworkInfo().isAvailable() && conMgr.getActiveNetworkInfo().isConnected())
                 return true;
             else
                 return false;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -479,18 +483,14 @@ public class SideMenu extends AppCompatActivity
     }
 
 
-
-
-
-    public void locationSetting()
-    {
+    public void locationSetting() {
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(5000);
         mLocationRequest.setFastestInterval(5000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
     }
 
-    public  void createLocationRequest() {
+    public void createLocationRequest() {
 
         locationSetting();
 
@@ -540,51 +540,49 @@ public class SideMenu extends AppCompatActivity
     }
 
 
-        public void init(View view){
+    public void init(View view) {
 
-        txtName=(TextView)view.findViewById(R.id.nameHeader);
-        imageView=(ImageView) view.findViewById(R.id.imageViewHeader);
+        txtName = (TextView) view.findViewById(R.id.nameHeader);
+        imageView = (ImageView) view.findViewById(R.id.imageViewHeader);
     }
 
-        private void SetImage(final Context context){
+    private void SetImage(final Context context) {
 
-        final DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference().child("username").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("username").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                  final String img  =dataSnapshot.child("ProfileImage").getValue(String.class);
-                  final String name  =dataSnapshot.child("name").getValue(String.class);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final String img = dataSnapshot.child("ProfileImage").getValue(String.class);
+                final String name = dataSnapshot.child("name").getValue(String.class);
 
-                    txtName.setText(name);
-                    Picasso.with(context).load(img).networkPolicy(NetworkPolicy.OFFLINE).into(imageView, new Callback() {
-                        @Override
-                        public void onSuccess() {
-
-
-                        }
-
-                        @Override
-                        public void onError() {
-
-                            Picasso.with(context).load(img).into(imageView);
-                        }
-                    });
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
+                txtName.setText(name);
+                Picasso.with(context).load(img).networkPolicy(NetworkPolicy.OFFLINE).into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
 
 
+                    }
+
+                    @Override
+                    public void onError() {
+
+                        Picasso.with(context).load(img).into(imageView);
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 
     }
 
 
-        //change language
+    //change language
     private static boolean updateResources(Context context, String language) {
         Locale locale = new Locale(language);
         Locale.setDefault(locale);
@@ -610,5 +608,38 @@ public class SideMenu extends AppCompatActivity
     }
 
 
+    public void SetImage(final Context context, DatabaseReference databaseReference) {
 
+        final ImageView img = (ImageView) findViewById(R.id.profile_image);
+
+        databaseReference.child("username").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final String uri = dataSnapshot.child("ProfileImage").getValue(String.class);
+
+
+                Picasso.with(context).load(uri).networkPolicy(NetworkPolicy.OFFLINE).into(img, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+
+                        Picasso.with(context).load(uri).into(img);
+                    }
+                });
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
 }

@@ -17,27 +17,29 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.example2017.android.tasks.ClientItem;
 import com.example2017.android.tasks.Mission;
 import com.example2017.android.tasks.R;
-import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 
 public class addTask extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     EditText taskDetails;
-    TextView timeFrom,timeTo;
+    TextView timeFrom,timeTo,txtName;
     SharedPreferences sh;
     Button ok,pickLocation, startTimer,endTimer;
-    String mTeamTypeArray[] , mDurationArray[];
+    String mTeamTypeArray[] , mDurationArray[],mProirityArray[];
     String mTeamType=null;
     String mNameSelected;
     String mDurationSelected;
-    Spinner mTeamTypeSpinner,mNameSpinner,mDurationSpinner;
+    String mPrioritySelected;
+    Spinner mTeamTypeSpinner,mDurationSpinner,mPrioritySpinner;
     DatabaseReference names;
     int yearFinal,monthFinal,dayFinal,hour,minute,hourFinal,minuteFinal=0;
     String period="";
@@ -53,17 +55,17 @@ public class addTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
         mTeamTypeArray = new String[]{getString(R.string.solo), getString(R.string.multi)};
         mDurationArray=new String []{getString(R.string.shortTime),getString(R.string.longTime)};
-
+        mProirityArray=new String[]{getString(R.string.high),getString(R.string.medium) ,getString(R.string.low )};
         mTeamType=mTeamTypeArray[0];
         mDurationSelected=mDurationArray[0];
-
+        mPrioritySelected=mProirityArray[0];
 
         ArrayAdapter<String> adapter2=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, mDurationArray);
         adapter2.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
 
         mDurationSpinner.setAdapter(adapter2);
 
-        mTeamTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mDurationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
@@ -101,6 +103,48 @@ public class addTask extends AppCompatActivity implements DatePickerDialog.OnDat
         });
 
 
+        ArrayAdapter<String> adapter1=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,mProirityArray);
+        adapter1.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+
+        mPrioritySpinner.setAdapter(adapter1);
+
+        mPrioritySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                mPrioritySelected=mProirityArray[i];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
+
+
+        String key=sh.getString("MemberKey", "emputy");
+        DatabaseReference name=FirebaseDatabase.getInstance().getReference().child("username").child(key);
+        name.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                String name=dataSnapshot.child("name").getValue(String.class);
+
+                mNameSelected=name;
+                txtName.setText(name);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+        /*
         FirebaseListAdapter<ClientItem> firebaseListAdapter  = new FirebaseListAdapter<ClientItem>(
                 this,
                 ClientItem.class,
@@ -121,7 +165,7 @@ public class addTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
         mNameSpinner.setAdapter(firebaseListAdapter);
 
-
+*/
 
         pickLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,7 +232,8 @@ public class addTask extends AppCompatActivity implements DatePickerDialog.OnDat
                         .setName(mNameSelected)
                         .setTargetLocation(targetLocation)
                         .setDurationType(mDurationSelected)
-                        .setTime(CollectionTimeFrom,CollectionTimeTo);
+                        .setTime(CollectionTimeFrom,CollectionTimeTo)
+                        .setPriority(mPrioritySelected);
                 mission.build();
                 finish();
 
@@ -207,13 +252,14 @@ public class addTask extends AppCompatActivity implements DatePickerDialog.OnDat
         taskDetails = (EditText) findViewById(R.id.task_details);
         ok = (Button) findViewById(R.id.addTask);
         mTeamTypeSpinner=(Spinner)findViewById(R.id.task_type);
-        mNameSpinner=(Spinner)findViewById(R.id.spinner_name);
         mDurationSpinner=(Spinner)findViewById(R.id.spinner_duration);
+        mPrioritySpinner=(Spinner)findViewById(R.id.spinner_prority);
         pickLocation=(Button)findViewById(R.id.pickLocation);
         startTimer=(Button)findViewById(R.id.startTimer);
         endTimer=(Button)findViewById(R.id.endTimer);
         timeFrom=(TextView)findViewById(R.id.timeFrom);
         timeTo=(TextView)findViewById(R.id.timeTo);
+        txtName=(TextView)findViewById(R.id.txt_name);
 
     }
 

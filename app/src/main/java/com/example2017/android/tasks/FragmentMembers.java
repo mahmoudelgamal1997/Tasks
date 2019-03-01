@@ -49,7 +49,7 @@ public class FragmentMembers extends Fragment {
             //normal teamleader
             teammembers = FirebaseDatabase.getInstance().getReference().child("TeamLeader").child(userId).child("members");
         }
-        LinearLayoutManager layoutManager= new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager= new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL, false);
         recyclerView = (RecyclerView)v. findViewById(R.id.view3);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -122,7 +122,7 @@ public class FragmentMembers extends Fragment {
 
         public void SetImage(final String img , final Context context){
 
-            final ImageView profileImage=(ImageView)view.findViewById(R.id.leaderProfileImage);
+            final ImageView profileImage=(ImageView)view.findViewById(R.id.user_profile_image);
 
             //  Glide.with(context).load(img).dontAnimate().into(profileImage).onLoadFailed();
 

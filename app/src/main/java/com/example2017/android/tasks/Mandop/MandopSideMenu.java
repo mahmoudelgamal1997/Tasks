@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.location.Location;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ShareCompat;
+import android.support.v7.app.ActionBar;
 import android.view.KeyEvent;
 import android.view.MenuInflater;
 import android.view.View;
@@ -58,6 +60,7 @@ import com.example2017.android.tasks.PlaceAutocompleteAdapter;
 import com.example2017.android.tasks.R;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
+import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -113,11 +116,12 @@ public class MandopSideMenu extends AppCompatActivity
     DatabaseReference tasks,teamleader;
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
     LocationRequest mLocationRequest;
-
+    View mapView ;
     FusedLocationProviderClient client;
    // private AutoCompleteTextView mAutoCompleteTextView;
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(new LatLng(-40,-168),new LatLng(71,163));
+
 
     private List<Polyline> polylines;
     LatLng start,end;
@@ -132,8 +136,26 @@ public class MandopSideMenu extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mandop_side_menu);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+       Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
+       setSupportActionBar(toolbar);
+
+        this.getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.switch_menu);
+        getSupportActionBar().setElevation(0);
+        View view = getSupportActionBar().getCustomView();
+
+        ImageView img =(ImageView)view.findViewById(R.id.Messages);
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MandopSideMenu.this, "messages", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
+
 
 
 
@@ -141,6 +163,10 @@ public class MandopSideMenu extends AppCompatActivity
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+
+        // change location of SetEnabledPostion
+        mapView = mapFragment.getView();
+
         mapFragment.getMapAsync(this);
 
         sh= getSharedPreferences("plz",MODE_PRIVATE);
@@ -198,7 +224,7 @@ public class MandopSideMenu extends AppCompatActivity
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+       ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
@@ -239,11 +265,28 @@ public class MandopSideMenu extends AppCompatActivity
 
             case R.id.switch_item:
                 Switch s=(Switch)findViewById(R.id.switchForActionBar);
+                SharedPreferences.Editor editor=sh.edit();
+
                 if (s.isChecked()){
                     s.setChecked(false);
+                    editor.putBoolean("switch",false);
+                    Toast.makeText(MandopSideMenu.this, "false", Toast.LENGTH_SHORT).show();
                 }else{
                     s.setChecked(true);
+                    editor.putBoolean("switch",true);
+                    Toast.makeText(MandopSideMenu.this, "True", Toast.LENGTH_SHORT).show();
+
                 }
+
+
+            case R.id.Messages:
+                ImageView img =(ImageView)findViewById(R.id.Messages);
+                img.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(MandopSideMenu.this, "messages", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
         }
 
@@ -342,7 +385,23 @@ public class MandopSideMenu extends AppCompatActivity
         mMap.setMyLocationEnabled(true);
 
 
+
+//to change postion of setMyLocationEnabled
+        if (mapView != null &&
+                mapView.findViewById(Integer.parseInt("1")) != null) {
+            // Get the button view
+            View locationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+            // and next place it, on bottom right (as Google Maps app)
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)
+                    locationButton.getLayoutParams();
+            // position on right bottom
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+            layoutParams.setMargins(0, 0, 30, 30);
+        }
+
     }
+
 
 
     protected synchronized void buildGoogleApiClients() {
@@ -430,8 +489,6 @@ public class MandopSideMenu extends AppCompatActivity
 
     void DisplayFragment(){
         FragmentTasks ft=new FragmentTasks();
-
-
         FragmentManager fragmentManager=getFragmentManager() ;
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment,ft)
@@ -608,7 +665,7 @@ public class MandopSideMenu extends AppCompatActivity
     }
 
 
-    public void SetImage( final Context context, DatabaseReference databaseReference)
+    public  void SetImage( final Context context, DatabaseReference databaseReference)
     {
 
         final ImageView img=(ImageView)findViewById(R.id.profile_image);
