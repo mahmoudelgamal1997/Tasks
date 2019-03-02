@@ -21,8 +21,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ShareCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -37,6 +39,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
@@ -129,35 +132,28 @@ public class MandopSideMenu extends AppCompatActivity
 
     String languageKey ;
     SharedPreferences sh;
-
+    boolean enable=false;
     private TextView txtName;
     private ImageView imageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mandop_side_menu);
-       Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
-       setSupportActionBar(toolbar);
-
-        this.getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.switch_menu);
-        getSupportActionBar().setElevation(0);
-        View view = getSupportActionBar().getCustomView();
-
-        ImageView img =(ImageView)view.findViewById(R.id.Messages);
-        img.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(MandopSideMenu.this, "messages", Toast.LENGTH_SHORT).show();
-            }
-        });
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
+        setSupportActionBar(toolbar);
 
 
 
 
 
-
+        sh= getSharedPreferences("plz",MODE_PRIVATE);
+        //get last value
+        enable=sh.getBoolean("switch",true);
+        if (enable){
+            Toast.makeText(MandopSideMenu.this, "You are online", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(MandopSideMenu.this, "You are offline", Toast.LENGTH_SHORT).show();
+        }
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -169,7 +165,6 @@ public class MandopSideMenu extends AppCompatActivity
 
         mapFragment.getMapAsync(this);
 
-        sh= getSharedPreferences("plz",MODE_PRIVATE);
         languageKey=sh.getString("LanguageKey","en");
         updateResources(getApplicationContext(),languageKey);
 
@@ -187,7 +182,6 @@ public class MandopSideMenu extends AppCompatActivity
 
         teamleader= FirebaseDatabase.getInstance().getReference().child("TeamLeader");
 
-        Toast.makeText(MandopSideMenu.this, "MAndopSideMenu", Toast.LENGTH_SHORT).show();
         //admin
         if (userId.equals("Sp17QHHa3vYoPh35JV2nWQ0zjFQ2")){
 
@@ -255,40 +249,58 @@ public class MandopSideMenu extends AppCompatActivity
         MenuInflater menuInflater=getMenuInflater();
         menuInflater.inflate(R.menu.item,menu);
 
+        MenuItem menuItem = menu.findItem(R.id.switch_item);
+        View view = MenuItemCompat.getActionView(menuItem);
+
+        Switch s=(Switch)view.findViewById(R.id.switchForActionBar);
+        s.setChecked(enable);
+        final SharedPreferences.Editor editor=sh.edit();
+        s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+
+                if (b==true){
+                    editor.putBoolean("switch",true);
+                    enable=true;
+                    Toast.makeText(MandopSideMenu.this, "you are online", Toast.LENGTH_SHORT).show();
+                    editor.apply();
+
+                }else{
+                    editor.putBoolean("switch",false);
+                    enable=false;
+                    Toast.makeText(MandopSideMenu.this, "You are offline", Toast.LENGTH_SHORT).show();
+                    editor.apply();
+
+                }
+            }
+        });
+
+
+        ImageView message=(ImageView)view.findViewById(R.id.Messages);
+        message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+
+        ImageView notification=(ImageView)view.findViewById(R.id.Notification);
+        notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MandopSideMenu.this, "Notification", Toast.LENGTH_SHORT).show();
+            }
+        });
         return true;
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch(item.getItemId()){
-
-            case R.id.switch_item:
-                Switch s=(Switch)findViewById(R.id.switchForActionBar);
-                SharedPreferences.Editor editor=sh.edit();
-
-                if (s.isChecked()){
-                    s.setChecked(false);
-                    editor.putBoolean("switch",false);
-                    Toast.makeText(MandopSideMenu.this, "false", Toast.LENGTH_SHORT).show();
-                }else{
-                    s.setChecked(true);
-                    editor.putBoolean("switch",true);
-                    Toast.makeText(MandopSideMenu.this, "True", Toast.LENGTH_SHORT).show();
-
-                }
-
-
-            case R.id.Messages:
-                ImageView img =(ImageView)findViewById(R.id.Messages);
-                img.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(MandopSideMenu.this, "messages", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        }
 
 
         return super.onOptionsItemSelected(item);
@@ -451,6 +463,7 @@ public class MandopSideMenu extends AppCompatActivity
     @Override
     public void onLocationChanged(Location location) {
 
+
         LatLng currentlocation = new LatLng(location.getLatitude(), location.getLongitude());
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentlocation));
@@ -462,6 +475,7 @@ public class MandopSideMenu extends AppCompatActivity
         edit.commit();
 
 
+        if (enable){
         FirebaseUser isUser = FirebaseAuth.getInstance().getCurrentUser();
         if (isUser != null) {
             userId = isUser.getUid();
@@ -473,6 +487,10 @@ public class MandopSideMenu extends AppCompatActivity
 
                 }
             });
+        }
+
+    }else{
+            Toast.makeText(MandopSideMenu.this, "turn your status to online to start work", Toast.LENGTH_SHORT).show();
         }
 
     }

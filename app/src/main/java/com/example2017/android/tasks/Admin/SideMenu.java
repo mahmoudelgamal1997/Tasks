@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ShareCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.view.KeyEvent;
 import android.view.MenuInflater;
 import android.view.View;
@@ -127,6 +128,7 @@ public class SideMenu extends AppCompatActivity
     String languageKey;
     SharedPreferences sh;
     private String userId;
+    boolean enable=false;
 
 
     @Override
@@ -137,11 +139,26 @@ public class SideMenu extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
+
+        sh= getSharedPreferences("plz",MODE_PRIVATE);
+        //get last value
+        enable=sh.getBoolean("switch",true);
+        if (enable){
+            Toast.makeText(SideMenu.this, "You are online", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(SideMenu.this, "You are offline", Toast.LENGTH_SHORT).show();
+        }
+
+
+
+
+        
+
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        Toast.makeText(SideMenu.this, "SideMenu", Toast.LENGTH_SHORT).show();
 
         DatabaseReference image=FirebaseDatabase.getInstance().getReference();
 
@@ -265,39 +282,61 @@ public class SideMenu extends AppCompatActivity
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.item, menu);
 
+
+        MenuItem menuItem = menu.findItem(R.id.switch_item);
+        View view = MenuItemCompat.getActionView(menuItem);
+
+        Switch s=(Switch)view.findViewById(R.id.switchForActionBar);
+        s.setChecked(enable);
+        final SharedPreferences.Editor editor=sh.edit();
+        s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+
+                if (b==true){
+                    editor.putBoolean("switch",true);
+                    enable=true;
+                    Toast.makeText(SideMenu.this, "you are online", Toast.LENGTH_SHORT).show();
+                    editor.apply();
+
+                }else{
+                    editor.putBoolean("switch",false);
+                    enable=false;
+                    Toast.makeText(SideMenu.this, "You are offline", Toast.LENGTH_SHORT).show();
+                    editor.apply();
+
+                }
+            }
+        });
+
+
+        ImageView message=(ImageView)view.findViewById(R.id.Messages);
+        message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+
+        ImageView notification=(ImageView)view.findViewById(R.id.Notification);
+        notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(SideMenu.this, "Notification", Toast.LENGTH_SHORT).show();
+            }
+        });
         return true;
     }
+
+
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
-
-
-            case R.id.switch_item:
-                Switch s=(Switch)findViewById(R.id.switchForActionBar);
-                final SharedPreferences.Editor editor=sh.edit();
-
-
-                s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-
-
-                        if (b==true){
-                            editor.putBoolean("switch",false);
-                            Toast.makeText(SideMenu.this, "false", Toast.LENGTH_SHORT).show();
-
-                        }else{
-                            editor.putBoolean("switch",true);
-                            Toast.makeText(SideMenu.this, "True", Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-                });
-
-
-        }
 
 
         return super.onOptionsItemSelected(item);
