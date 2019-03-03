@@ -65,6 +65,8 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".Chat.ChatMembers" />
         <activity android:name=".Chat.ChatPrivate"></activity>
+
+        <service android:name=".Service.Notification"/>
     </application>
 
 </manifest>

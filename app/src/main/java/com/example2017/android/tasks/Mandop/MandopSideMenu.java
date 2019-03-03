@@ -2,6 +2,8 @@ package com.example2017.android.tasks.Mandop;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +22,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
@@ -61,6 +65,7 @@ import com.example2017.android.tasks.MainActivity;
 import com.example2017.android.tasks.Mandob_Map;
 import com.example2017.android.tasks.PlaceAutocompleteAdapter;
 import com.example2017.android.tasks.R;
+import com.example2017.android.tasks.Service.Notification;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.ads.formats.NativeAd;
@@ -96,6 +101,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -108,6 +114,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 public class MandopSideMenu extends AppCompatActivity
         implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, LocationListener, NavigationView.OnNavigationItemSelectedListener,MainContract.IView {
@@ -168,6 +175,8 @@ public class MandopSideMenu extends AppCompatActivity
         languageKey=sh.getString("LanguageKey","en");
         updateResources(getApplicationContext(),languageKey);
 
+        //start service for Notification
+       startService(new Intent(getBaseContext(), Notification.class));
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
      //   mAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.input_search);
@@ -272,6 +281,7 @@ public class MandopSideMenu extends AppCompatActivity
                     Toast.makeText(MandopSideMenu.this, "You are offline", Toast.LENGTH_SHORT).show();
                     editor.apply();
 
+
                 }
             }
         });
@@ -300,9 +310,6 @@ public class MandopSideMenu extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -732,5 +739,75 @@ public class MandopSideMenu extends AppCompatActivity
         }
     }
 
+
+
+    private void getNotification(){
+        final String id=FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        DatabaseReference notify=FirebaseDatabase.getInstance().getReference().child("Notification").child(id);
+
+
+
+
+
+       notify.addChildEventListener(new ChildEventListener() {
+           @Override
+           public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+
+               prepareNotification(dataSnapshot.child("from").getValue(String.class));
+           }
+
+           @Override
+           public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+           }
+
+           @Override
+           public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+           }
+
+           @Override
+           public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+           }
+
+           @Override
+           public void onCancelled(DatabaseError databaseError) {
+
+           }
+       });
+
+
+
+
+
+
+
+
+
+
+    }
+
+    private void prepareNotification(String name){
+        Random r=new Random();
+        int id= r.nextInt(5);
+
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.drawable.appicon)
+                        .setContentTitle(name)
+                        .setContentText("you have a new message");
+
+        Intent notificationIntent = new Intent(getApplicationContext(), MandopSideMenu.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(),id , notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(contentIntent);
+
+        // Add as notification
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.notify(id, builder.build());
+    }
 
 }

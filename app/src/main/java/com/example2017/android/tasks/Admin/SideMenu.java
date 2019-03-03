@@ -57,6 +57,7 @@ import com.example2017.android.tasks.MainActivity;
 import com.example2017.android.tasks.Mandop.MandopSideMenu;
 import com.example2017.android.tasks.PlaceAutocompleteAdapter;
 import com.example2017.android.tasks.R;
+import com.example2017.android.tasks.Service.Notification;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -158,6 +159,10 @@ public class SideMenu extends AppCompatActivity
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+        //start service for Notification
+        startService(new Intent(getBaseContext(), Notification.class));
 
 
         DatabaseReference image=FirebaseDatabase.getInstance().getReference();
@@ -306,6 +311,8 @@ public class SideMenu extends AppCompatActivity
                     Toast.makeText(SideMenu.this, "You are offline", Toast.LENGTH_SHORT).show();
                     editor.apply();
 
+                    //stop Service
+                    stopService(new Intent(getBaseContext(), Notification.class));
                 }
             }
         });

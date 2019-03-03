@@ -29,7 +29,7 @@ import java.util.Calendar;
 
 public class ChatPrivate extends AppCompatActivity {
 
-    DatabaseReference chat,temp,RecieveMessage;
+    DatabaseReference chat,temp,RecieveMessage,Notification;
     RecyclerView recyclerView;
     EditText Message;
     Button butSend;
@@ -46,6 +46,7 @@ public class ChatPrivate extends AppCompatActivity {
         final String RecieverId = i.getStringExtra("id");
         final String SenderId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         chat = FirebaseDatabase.getInstance().getReference().child("chat");
+        Notification=FirebaseDatabase.getInstance().getReference().child("Notification");
         RecieveMessage=FirebaseDatabase.getInstance().getReference().child("chat");
 
         recyclerView = (RecyclerView) findViewById(R.id.ChatView);
@@ -103,6 +104,22 @@ public class ChatPrivate extends AppCompatActivity {
                             temp.child("from").setValue(SenderId);
                             temp.child("Time").setValue(MessageTime());
 
+                            DatabaseReference username = FirebaseDatabase.getInstance().getReference().child("username").child(SenderId);
+                            username.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                   String name = (dataSnapshot.child("name").getValue(String.class));
+                                    Notification.child(RecieverId).child(SenderId).child("from").setValue(name);
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
                             Message.setText("");
 
 
@@ -114,6 +131,21 @@ public class ChatPrivate extends AppCompatActivity {
                             temp.child("message").setValue(Message.getText().toString());
                             temp.child("from").setValue(RecieverId);
                             temp.child("Time").setValue(MessageTime());
+                            DatabaseReference username = FirebaseDatabase.getInstance().getReference().child("username").child(SenderId);
+                            username.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                    String name = (dataSnapshot.child("name").getValue(String.class));
+                                    Notification.child(RecieverId).child(SenderId).child("from").setValue(name);
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
 
                             Message.setText("");
 
@@ -126,6 +158,21 @@ public class ChatPrivate extends AppCompatActivity {
                             temp.child("message").setValue(Message.getText().toString());
                             temp.child("from").setValue(SenderId);
                             temp.child("Time").setValue(MessageTime());
+                            DatabaseReference username = FirebaseDatabase.getInstance().getReference().child("username").child(SenderId);
+                            username.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                    String name = (dataSnapshot.child("name").getValue(String.class));
+                                    Notification.child(RecieverId).child(SenderId).child("from").setValue(name);
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
                             Message.setText("");
 
 
@@ -256,5 +303,8 @@ public class ChatPrivate extends AppCompatActivity {
         final String CollectionDate=""+year+"-"+month+"-"+day+"  "+hour+":"+minute;
         return CollectionDate;
     }
+
+
+
 
 }
