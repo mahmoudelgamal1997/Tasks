@@ -35,6 +35,8 @@ public class Notification extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         getNotification();
+        System.out.println("Service started");
+
         return START_STICKY;
     }
 
@@ -43,6 +45,7 @@ public class Notification extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
+
 
     private void getNotification(){
         final String id= FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -55,8 +58,18 @@ public class Notification extends Service {
          childEventListener=new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
                 prepareNotification(dataSnapshot.child("from").getValue(String.class));
 
+                if (s != null){
+                    notify.child(s).removeValue();
+                }
+
+                if(dataSnapshot.getChildrenCount()==1) {
+                    notify.removeValue();
+                    Toast.makeText(Notification.this,"All notification loaded" , Toast.LENGTH_SHORT).show();
+
+                }
             }
 
             @Override
@@ -86,32 +99,18 @@ public class Notification extends Service {
 
 
 
-        /*
-
-       SharedPreferences sh= getSharedPreferences("plz",MODE_PRIVATE);
-        //get last value
-        boolean enable=sh.getBoolean("switch",true);
-        while(!enable)
-        {
-            //stop Service
-            stopService(new Intent(getBaseContext(), Notification.class));
-
-
-        }
-
-
-
-
-*/
 
 
     }
 
+
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Toast.makeText(Notification.this, "destroyed", Toast.LENGTH_SHORT).show();
-      //  notify.removeEventListener(childEventListener);
+
+        notify.removeEventListener(childEventListener);
+        Toast.makeText(Notification.this, "Destroyed", Toast.LENGTH_LONG).show();
 
     }
 

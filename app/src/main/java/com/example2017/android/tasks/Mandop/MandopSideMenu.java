@@ -2,8 +2,6 @@ package com.example2017.android.tasks.Mandop;
 
 import android.app.Activity;
 import android.app.FragmentManager;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -13,22 +11,13 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.location.Location;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBar;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -40,9 +29,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -50,31 +36,23 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.directions.route.AbstractRouting;
-import com.directions.route.Route;
-import com.directions.route.RouteException;
-import com.directions.route.Routing;
-import com.directions.route.RoutingListener;
-import com.example2017.android.tasks.Admin.AdminMap;
-import com.example2017.android.tasks.Admin.GmailWebView;
+import com.example2017.android.tasks.Admin.TeamLeaderSide;
 import com.example2017.android.tasks.Admin.SideMenu;
+import com.example2017.android.tasks.Admin.ViewMembers;
+import com.example2017.android.tasks.BooVariable;
 import com.example2017.android.tasks.Chat.ChatMembers;
 import com.example2017.android.tasks.FragmentMembers;
 import com.example2017.android.tasks.FragmentTasks;
 import com.example2017.android.tasks.MainActivity;
-import com.example2017.android.tasks.Mandob_Map;
 import com.example2017.android.tasks.PlaceAutocompleteAdapter;
 import com.example2017.android.tasks.R;
 import com.example2017.android.tasks.Service.Notification;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
-import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -82,11 +60,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.location.places.AutocompletePrediction;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -96,12 +70,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -114,7 +86,6 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 public class MandopSideMenu extends AppCompatActivity
         implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, LocationListener, NavigationView.OnNavigationItemSelectedListener,MainContract.IView {
@@ -131,7 +102,7 @@ public class MandopSideMenu extends AppCompatActivity
    // private AutoCompleteTextView mAutoCompleteTextView;
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(new LatLng(-40,-168),new LatLng(71,163));
-
+    BooVariable bv;
 
     private List<Polyline> polylines;
     LatLng start,end;
@@ -153,14 +124,15 @@ public class MandopSideMenu extends AppCompatActivity
 
 
 
+
+
+
+
+
         sh= getSharedPreferences("plz",MODE_PRIVATE);
         //get last value
         enable=sh.getBoolean("switch",true);
-        if (enable){
-            Toast.makeText(MandopSideMenu.this, "You are online", Toast.LENGTH_SHORT).show();
-        }else{
-            Toast.makeText(MandopSideMenu.this, "You are offline", Toast.LENGTH_SHORT).show();
-        }
+
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -169,17 +141,15 @@ public class MandopSideMenu extends AppCompatActivity
 
         // change location of SetEnabledPostion
         mapView = mapFragment.getView();
-
         mapFragment.getMapAsync(this);
+
 
         languageKey=sh.getString("LanguageKey","en");
         updateResources(getApplicationContext(),languageKey);
 
-        //start service for Notification
-       startService(new Intent(getBaseContext(), Notification.class));
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-     //   mAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.input_search);
+
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         polylines = new ArrayList<>();
         client = LocationServices.getFusedLocationProviderClient(this);
@@ -205,8 +175,7 @@ public class MandopSideMenu extends AppCompatActivity
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                     if (dataSnapshot.hasChild(userId.toString())) {
-                        Intent ii= new Intent(MandopSideMenu.this,AdminMap.class);
-                        startActivity(ii);
+                        DisplayFragmentMemberOnMap();
                         DisplayFragmentMember();
                     } else {
                         DisplayFragment();
@@ -275,11 +244,15 @@ public class MandopSideMenu extends AppCompatActivity
                     Toast.makeText(MandopSideMenu.this, "you are online", Toast.LENGTH_SHORT).show();
                     editor.apply();
 
+                    bv.setEnable(true);
+
                 }else{
                     editor.putBoolean("switch",false);
                     enable=false;
                     Toast.makeText(MandopSideMenu.this, "You are offline", Toast.LENGTH_SHORT).show();
                     editor.apply();
+
+                    bv.setEnable(false);
 
 
                 }
@@ -510,6 +483,14 @@ public class MandopSideMenu extends AppCompatActivity
 
 
 
+    void DisplayFragmentMemberOnMap(){
+        ViewMembers ft3=new ViewMembers();
+        android.support.v4.app.FragmentManager fragmentManager=getSupportFragmentManager() ;
+        fragmentManager.beginTransaction()
+                .replace(R.id.map,ft3)
+                .commit();
+
+    }
 
 
     void DisplayFragment(){
@@ -665,6 +646,10 @@ public class MandopSideMenu extends AppCompatActivity
 
         txtName=(TextView)view.findViewById(R.id.name_mandop);
         imageView=(ImageView) view.findViewById(R.id.imageView_Mandop);
+
+
+         bv = new BooVariable();
+
     }
 
 
@@ -739,75 +724,38 @@ public class MandopSideMenu extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+        if (enable){
+            //start service for Notification
+            startService(new Intent(getBaseContext(), Notification.class));
 
-    private void getNotification(){
-        final String id=FirebaseAuth.getInstance().getCurrentUser().getUid();
+            Toast.makeText(MandopSideMenu.this, "You are online", Toast.LENGTH_SHORT).show();
+        }else{
 
-        DatabaseReference notify=FirebaseDatabase.getInstance().getReference().child("Notification").child(id);
+            Toast.makeText(MandopSideMenu.this, "You are offline", Toast.LENGTH_SHORT).show();
 
-
-
-
-
-       notify.addChildEventListener(new ChildEventListener() {
-           @Override
-           public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-
-               prepareNotification(dataSnapshot.child("from").getValue(String.class));
-           }
-
-           @Override
-           public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-           }
-
-           @Override
-           public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-           }
-
-           @Override
-           public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-           }
-
-           @Override
-           public void onCancelled(DatabaseError databaseError) {
-
-           }
-       });
+        }
 
 
 
 
+        bv.setListener(new BooVariable.ChangeListener() {
+            @Override
+            public void onChange() {
 
+            if (bv.isEnable()){
+                startService(new Intent(getBaseContext(), Notification.class));
 
+            }else {
+                stopService(new Intent(getBaseContext(), Notification.class));
 
+            }
 
-
+            }
+        });
 
     }
-
-    private void prepareNotification(String name){
-        Random r=new Random();
-        int id= r.nextInt(5);
-
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(getApplicationContext())
-                        .setSmallIcon(R.drawable.appicon)
-                        .setContentTitle(name)
-                        .setContentText("you have a new message");
-
-        Intent notificationIntent = new Intent(getApplicationContext(), MandopSideMenu.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(),id , notificationIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentIntent(contentIntent);
-
-        // Add as notification
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.notify(id, builder.build());
-    }
-
 }

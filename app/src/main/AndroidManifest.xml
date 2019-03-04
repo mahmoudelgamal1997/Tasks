@@ -47,7 +47,7 @@
         <activity android:name=".MemberDetails" />
         <activity android:name=".TaskDetailsForMembers" />
         <activity
-            android:name=".Admin.AdminMap"
+            android:name=".Admin.TeamLeaderSide"
             android:label="@string/title_activity_admin_map" />
         <activity android:name=".Admin.addTask" />
         <activity
@@ -64,9 +64,10 @@
             android:label="@string/title_activity_mandop_side_menu"
             android:theme="@style/AppTheme" />
         <activity android:name=".Chat.ChatMembers" />
-        <activity android:name=".Chat.ChatPrivate"></activity>
+        <activity android:name=".Chat.ChatPrivate" />
 
-        <service android:name=".Service.Notification"/>
+        <service android:name=".Service.Notification" />
+
     </application>
 
 </manifest>

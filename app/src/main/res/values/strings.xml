@@ -57,5 +57,6 @@
     <string name="SelectLeader">Select Leader</string>
     <string name="title_activity_adress_map">Map</string>
     <string name="title_activity_mandop_side_menu">MandopSideMenu</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>

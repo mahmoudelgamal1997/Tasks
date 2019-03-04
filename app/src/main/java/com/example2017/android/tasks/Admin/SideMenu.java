@@ -51,6 +51,7 @@ import com.directions.route.Route;
 import com.directions.route.RouteException;
 import com.directions.route.Routing;
 import com.directions.route.RoutingListener;
+import com.example2017.android.tasks.BooVariable;
 import com.example2017.android.tasks.Chat.ChatMembers;
 import com.example2017.android.tasks.FragmentTeamLeaders;
 import com.example2017.android.tasks.MainActivity;
@@ -114,7 +115,6 @@ public class SideMenu extends AppCompatActivity
         implements OnMapReadyCallback, LocationListener, NavigationView.OnNavigationItemSelectedListener {
 
     private GoogleMap mMap;
-    Location mlocation;
     private LatLng postion;
     LatLng currentPostion = new LatLng(29.975051, 31.287913);
     String name;
@@ -122,15 +122,14 @@ public class SideMenu extends AppCompatActivity
     FusedLocationProviderClient client;
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
     LocationRequest mLocationRequest;
-    ListView listView;
-    ArrayAdapter<String> adapter;
-    private TextView txtName, txtEmail;
+    private TextView txtName;
     private ImageView imageView;
     String languageKey;
     SharedPreferences sh;
     private String userId;
     boolean enable=false;
 
+   private BooVariable bv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,11 +143,7 @@ public class SideMenu extends AppCompatActivity
         sh= getSharedPreferences("plz",MODE_PRIVATE);
         //get last value
         enable=sh.getBoolean("switch",true);
-        if (enable){
-            Toast.makeText(SideMenu.this, "You are online", Toast.LENGTH_SHORT).show();
-        }else{
-            Toast.makeText(SideMenu.this, "You are offline", Toast.LENGTH_SHORT).show();
-        }
+
 
 
 
@@ -305,14 +300,16 @@ public class SideMenu extends AppCompatActivity
                     Toast.makeText(SideMenu.this, "you are online", Toast.LENGTH_SHORT).show();
                     editor.apply();
 
+                    bv.setEnable(true);
+
+
                 }else{
                     editor.putBoolean("switch",false);
                     enable=false;
                     Toast.makeText(SideMenu.this, "You are offline", Toast.LENGTH_SHORT).show();
                     editor.apply();
 
-                    //stop Service
-                    stopService(new Intent(getBaseContext(), Notification.class));
+                    bv.setEnable(false);
                 }
             }
         });
@@ -590,6 +587,8 @@ public class SideMenu extends AppCompatActivity
 
         txtName = (TextView) view.findViewById(R.id.nameHeader);
         imageView = (ImageView) view.findViewById(R.id.imageViewHeader);
+        bv = new BooVariable();
+
     }
 
     private void SetImage(final Context context) {
@@ -686,6 +685,43 @@ public class SideMenu extends AppCompatActivity
             }
         });
 
+
+    }
+
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (enable){
+            //start service for Notification
+            startService(new Intent(getBaseContext(), Notification.class));
+
+            Toast.makeText(SideMenu.this, "You are online", Toast.LENGTH_SHORT).show();
+        }else{
+
+            Toast.makeText(SideMenu.this, "You are offline", Toast.LENGTH_SHORT).show();
+
+        }
+
+
+
+        bv.setListener(new BooVariable.ChangeListener() {
+            @Override
+            public void onChange() {
+
+                if (bv.isEnable()){
+                    startService(new Intent(getBaseContext(), Notification.class));
+
+                }else {
+                    stopService(new Intent(getBaseContext(), Notification.class));
+
+                }
+
+            }
+        });
 
     }
 }

@@ -6,23 +6,19 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.directions.route.AbstractRouting;
@@ -30,7 +26,7 @@ import com.directions.route.Route;
 import com.directions.route.RouteException;
 import com.directions.route.Routing;
 import com.directions.route.RoutingListener;
-import com.example2017.android.tasks.Admin.AdminMap;
+import com.example2017.android.tasks.Admin.TeamLeaderSide;
 import com.example2017.android.tasks.Admin.SideMenu;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -137,7 +133,7 @@ public class Mandob_Map extends AppCompatActivity implements OnMapReadyCallback,
 
                     if (dataSnapshot.hasChild(userId.toString())) {
 
-                        Intent ii= new Intent(Mandob_Map.this,AdminMap.class);
+                        Intent ii= new Intent(Mandob_Map.this,TeamLeaderSide.class);
                         startActivity(ii);
                         finish();
 

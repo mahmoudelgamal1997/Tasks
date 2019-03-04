@@ -2,8 +2,8 @@ package com.example2017.android.tasks.Admin;
 
 import android.app.FragmentManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.location.Location;
@@ -15,27 +15,30 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example2017.android.tasks.BooVariable;
 import com.example2017.android.tasks.FragmentMembers;
 import com.example2017.android.tasks.FragmentTeamLeaders;
-import com.example2017.android.tasks.MainActivity;
 import com.example2017.android.tasks.PlaceAutocompleteAdapter;
 import com.example2017.android.tasks.R;
 import com.firebase.geofire.GeoFire;
@@ -51,7 +54,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
@@ -68,14 +70,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class AdminMap extends AppCompatActivity implements OnMapReadyCallback, LocationListener, NavigationView.OnNavigationItemSelectedListener {
+public class TeamLeaderSide extends AppCompatActivity implements OnMapReadyCallback, LocationListener, NavigationView.OnNavigationItemSelectedListener {
 
     private GoogleMap mMap;
-    Location mlocation;
     private LatLng postion;
     LatLng currentPostion = new LatLng(29.975051,31.287913);
     String name;
@@ -83,17 +87,22 @@ public class AdminMap extends AppCompatActivity implements OnMapReadyCallback, L
     FusedLocationProviderClient client;
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
     LocationRequest mLocationRequest;
-    ListView listView;
-    ArrayAdapter<String> adapter;
-    private AutoCompleteTextView mAutoCompleteTextView;
-    private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
-    private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(new LatLng(-40,-168),new LatLng(71,163));
+    SharedPreferences sh;
+    boolean enable=false;
+    TextView txtName;
+    ImageView imageView;
+    BooVariable bv;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mandob__map);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
+        setSupportActionBar(toolbar);
+
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -101,7 +110,23 @@ public class AdminMap extends AppCompatActivity implements OnMapReadyCallback, L
 
 
 
-        Toast.makeText(AdminMap.this, "AdminMap", Toast.LENGTH_SHORT).show();
+        Toast.makeText(TeamLeaderSide.this, "TeamLeaderSide", Toast.LENGTH_SHORT).show();
+
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        View headerView = navigationView.getHeaderView(0);
+        init(headerView);
+
+        SetImage(getApplicationContext());
 
 
         // setup markers
@@ -118,27 +143,82 @@ public class AdminMap extends AppCompatActivity implements OnMapReadyCallback, L
 
 
 
-    }
+        //to get switch value
+        sh= getSharedPreferences("plz",MODE_PRIVATE);
+        //get last value
+        enable=sh.getBoolean("switch",true);
 
+
+
+    }
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        MenuInflater menuInflater=getMenuInflater();
-        menuInflater.inflate(R.menu.item,menu);
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.item, menu);
 
+
+        MenuItem menuItem = menu.findItem(R.id.switch_item);
+        View view = MenuItemCompat.getActionView(menuItem);
+
+        Switch s=(Switch)view.findViewById(R.id.switchForActionBar);
+        s.setChecked(enable);
+        final SharedPreferences.Editor editor=sh.edit();
+        s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+
+                if (b==true){
+                    editor.putBoolean("switch",true);
+                    enable=true;
+                    Toast.makeText(TeamLeaderSide.this, "you are online", Toast.LENGTH_SHORT).show();
+                    editor.apply();
+
+                    bv.setEnable(true);
+
+
+                }else{
+                    editor.putBoolean("switch",false);
+                    enable=false;
+                    Toast.makeText(TeamLeaderSide.this, "You are offline", Toast.LENGTH_SHORT).show();
+                    editor.apply();
+
+                    bv.setEnable(false);
+                }
+            }
+        });
+
+
+        ImageView message=(ImageView)view.findViewById(R.id.Messages);
+        message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+
+        ImageView notification=(ImageView)view.findViewById(R.id.Notification);
+        notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(TeamLeaderSide.this, "Notification", Toast.LENGTH_SHORT).show();
+            }
+        });
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch(item.getItemId()){
-
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     /**
      * Manipulates the map once available.
@@ -172,7 +252,7 @@ public class AdminMap extends AppCompatActivity implements OnMapReadyCallback, L
 
 
         if (client.getLastLocation() != null) {
-            client.getLastLocation().addOnCompleteListener(AdminMap.this, new OnCompleteListener<Location>() {
+            client.getLastLocation().addOnCompleteListener(TeamLeaderSide.this, new OnCompleteListener<Location>() {
                 @Override
                 public void onComplete(@NonNull Task<Location> task) {
 
@@ -181,7 +261,7 @@ public class AdminMap extends AppCompatActivity implements OnMapReadyCallback, L
                      //     currentPostion = new LatLng(task.getResult().getLatitude(), task.getResult().getLongitude());
 
                     } else {
-                        Toast.makeText(AdminMap.this, "failed to get loction", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TeamLeaderSide.this, "failed to get loction", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -378,7 +458,7 @@ public class AdminMap extends AppCompatActivity implements OnMapReadyCallback, L
                                 // Show the dialog by calling startResolutionForResult(),
                                 // and check the result in onActivityResult().
                                 resolvable.startResolutionForResult(
-                                        AdminMap.this,
+                                        TeamLeaderSide.this,
                                         REQUEST_CHECK_SETTINGS);
                             } catch (IntentSender.SendIntentException e) {
                                 // Ignore the error.
@@ -413,5 +493,48 @@ public class AdminMap extends AppCompatActivity implements OnMapReadyCallback, L
 
     }
 
+
+    private void SetImage(final Context context) {
+
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("username").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final String img = dataSnapshot.child("ProfileImage").getValue(String.class);
+                final String name = dataSnapshot.child("name").getValue(String.class);
+
+                txtName.setText(name);
+                Picasso.with(context).load(img).networkPolicy(NetworkPolicy.OFFLINE).into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+
+                    }
+
+                    @Override
+                    public void onError() {
+
+                        Picasso.with(context).load(img).into(imageView);
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+    public void init(View view) {
+
+        txtName = (TextView) view.findViewById(R.id.nameHeader);
+        imageView = (ImageView) view.findViewById(R.id.imageViewHeader);
+        bv = new BooVariable();
+
+    }
 
 }
