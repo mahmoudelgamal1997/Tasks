@@ -9,6 +9,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -68,8 +70,7 @@ public class ChatPrivate extends AppCompatActivity {
 
                 }
 
-
-            }
+                }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -104,6 +105,7 @@ public class ChatPrivate extends AppCompatActivity {
                             temp.child("from").setValue(SenderId);
                             temp.child("Time").setValue(MessageTime());
 
+                            //Notification
                             DatabaseReference username = FirebaseDatabase.getInstance().getReference().child("username").child(SenderId);
                             username.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -121,7 +123,7 @@ public class ChatPrivate extends AppCompatActivity {
                             });
 
                             Message.setText("");
-
+                            display();
 
 
                         }else if (dataSnapshot.child(RecieverId).child(SenderId).hasChildren()){
@@ -148,7 +150,7 @@ public class ChatPrivate extends AppCompatActivity {
                             });
 
                             Message.setText("");
-
+                            display();
                         }else{
 
                             //then database reference isn't exist
@@ -174,7 +176,7 @@ public class ChatPrivate extends AppCompatActivity {
                                 }
                             });
                             Message.setText("");
-
+                            display();
 
                         }
                     }
@@ -211,10 +213,10 @@ public class ChatPrivate extends AppCompatActivity {
 
                 viewHolder.SetData(model.getfrom(),model.getTime(),model.getMessage());
 
+                Toast.makeText(ChatPrivate.this, model.getfrom(), Toast.LENGTH_SHORT).show();
                 chat.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Toast.makeText(ChatPrivate.this,dataSnapshot.getChildrenCount() +"", Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -247,22 +249,45 @@ public class ChatPrivate extends AppCompatActivity {
         }
 
 
-        public void SetData(String Id ,String Time , String Message){
+        public void SetData(String Id , final String Time , final String Message){
             final TextView txtName=(TextView)view.findViewById(R.id.textview_username);
-            TextView txtTime=(TextView)view.findViewById(R.id.textview_timeSent);
-            TextView txtMessage=(TextView)view.findViewById(R.id.textview_Message);
+            final TextView txtTime=(TextView)view.findViewById(R.id.textview_timeSent);
+            final TextView txtMessage=(TextView)view.findViewById(R.id.textview_Message);
             CardView cardView=(CardView)view.findViewById(R.id.Card_message);
 
 
+            // if your message color it to orange
                if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals(Id)){
                 txtName.setText("You");
-                cardView.setCardBackgroundColor(R.color.primary_dark);
+                txtName.setTextColor(view.getResources().getColor(R.color.icons));
+
+                txtTime.setText(Time);
+                txtTime.setTextColor(view.getResources().getColor(R.color.icons));
+
+
+                txtMessage.setText(Message);
+                txtMessage.setTextColor(view.getResources().getColor(R.color.icons));
+
+                cardView.setCardBackgroundColor(view.getResources().getColor(R.color.colorPrimary));
+
+                   ViewGroup.MarginLayoutParams cardViewMarginParams = (ViewGroup.MarginLayoutParams) cardView.getLayoutParams();
+                   cardViewMarginParams.setMargins(700, 0, 0, 10);
+                   cardView.requestLayout();  //Dont forget this line
+
+
+
+
+
             }else {
                 DatabaseReference username=FirebaseDatabase.getInstance().getReference().child("username").child(Id);
                 username.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         txtName.setText(dataSnapshot.child("name").getValue(String.class));
+                        txtTime.setText(Time);
+                        txtMessage.setText(Message);
+
+
                     }
 
                     @Override
@@ -271,8 +296,6 @@ public class ChatPrivate extends AppCompatActivity {
                     }
                 });
             }
-        //    txtTime.setText(Time);
-            txtMessage.setText(Message);
 
 
         }

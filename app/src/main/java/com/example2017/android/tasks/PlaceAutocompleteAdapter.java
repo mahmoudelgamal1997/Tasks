@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
- * Adapter that handles Autocomplete requests from the Places Geo Data Client.
+ * Adapter that handles Autocomplete requests from the Places Geo Dataa Client.
  * {@link AutocompletePrediction} results from the API are frozen and stored directly in this
  * adapter. (See {@link AutocompletePrediction#freeze()}.)
  */
@@ -57,7 +57,7 @@ public class PlaceAutocompleteAdapter
      */
 
     /**
-     * The bounds used for Places Geo Data autocomplete API requests.
+     * The bounds used for Places Geo Dataa autocomplete API requests.
      */
     private LatLngBounds mBounds;
 
@@ -177,7 +177,7 @@ public class PlaceAutocompleteAdapter
     }
 
     /**
-     * Submits an autocomplete query to the Places Geo Data Autocomplete API.
+     * Submits an autocomplete query to the Places Geo Dataa Autocomplete API.
      * Results are returned as frozen AutocompletePrediction objects, ready to be cached.
      * Returns an empty list if no results were found.
      * Returns null if the API client is not available or the query did not complete

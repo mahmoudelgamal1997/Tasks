@@ -17,11 +17,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.view.KeyEvent;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -32,43 +31,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.WindowManager;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
-import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.directions.route.AbstractRouting;
-import com.directions.route.Route;
-import com.directions.route.RouteException;
-import com.directions.route.Routing;
-import com.directions.route.RoutingListener;
 import com.example2017.android.tasks.BooVariable;
 import com.example2017.android.tasks.Chat.ChatMembers;
 import com.example2017.android.tasks.FragmentTeamLeaders;
 import com.example2017.android.tasks.MainActivity;
-import com.example2017.android.tasks.Mandop.MandopSideMenu;
-import com.example2017.android.tasks.PlaceAutocompleteAdapter;
 import com.example2017.android.tasks.R;
+import com.example2017.android.tasks.api.APIInterface;
 import com.example2017.android.tasks.Service.Notification;
+import com.example2017.android.tasks.api.Reports;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -76,23 +60,13 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.location.places.AutocompletePrediction;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -101,15 +75,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SideMenu extends AppCompatActivity
         implements OnMapReadyCallback, LocationListener, NavigationView.OnNavigationItemSelectedListener {
@@ -128,6 +106,7 @@ public class SideMenu extends AppCompatActivity
     SharedPreferences sh;
     private String userId;
     boolean enable=false;
+    Context context;
 
    private BooVariable bv;
 
@@ -138,7 +117,7 @@ public class SideMenu extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        context = getApplicationContext();
 
         sh= getSharedPreferences("plz",MODE_PRIVATE);
         //get last value
@@ -148,7 +127,6 @@ public class SideMenu extends AppCompatActivity
 
 
 
-        
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -195,6 +173,12 @@ public class SideMenu extends AppCompatActivity
         createLocationRequest();
 
         DisplayFragmentLeader();
+
+
+
+
+
+
     }
 
     @Override
@@ -320,6 +304,7 @@ public class SideMenu extends AppCompatActivity
             @Override
             public void onClick(View view) {
 
+                startActivity(new Intent(SideMenu.this, ChatMembers.class));
             }
         });
 
@@ -533,6 +518,7 @@ public class SideMenu extends AppCompatActivity
         mLocationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
     }
 
+
     public void createLocationRequest() {
 
         locationSetting();
@@ -724,4 +710,10 @@ public class SideMenu extends AppCompatActivity
         });
 
     }
+
+
+
+
+
+
 }

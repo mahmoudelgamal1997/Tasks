@@ -60,24 +60,26 @@ public class ChatMembers extends AppCompatActivity {
             @Override
             protected void populateView(View v, ChatMessage model, final int position) {
 
-                if ( ! model.getName().equals(name)){
-                TextView txt=(TextView)v.findViewById(R.id.ChatName);
-                SetImage(v,getApplicationContext(),model.getProfileImage());
 
-                txt.setText(model.getName());
-                v.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                    if (!model.getName().equals(name)) {
+                        TextView txt = (TextView) v.findViewById(R.id.ChatName);
+                        SetImage(v, getApplicationContext(), model.getProfileImage());
 
-                        Intent i=new Intent(ChatMembers.this,ChatPrivate.class);
-                        i.putExtra("id",getRef(position).getKey().toString());
-                        startActivity(i);
+                        txt.setText(model.getName());
+                        v.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                Intent i = new Intent(ChatMembers.this, ChatPrivate.class);
+                                i.putExtra("id", getRef(position).getKey().toString());
+                                startActivity(i);
+                            }
+                        });
+
                     }
-                });
 
-            }
+                }
 
-            }
         };
 
 

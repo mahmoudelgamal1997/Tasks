@@ -35,7 +35,7 @@ public class Notification extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         getNotification();
-        System.out.println("Service started");
+        System.out.println("APIInterface started");
 
         return START_STICKY;
     }

@@ -37,5 +37,14 @@
     <string name="title_activity_mandop_side_menu">قائمه مندوب</string>
     <string name="home">الرئيسيه</string>
     <string name="createAccount">تسجيل عضويه</string>
+    <string name="Notifications">الاشعارات</string>
+    <string name="ShareForApp">مشاركه</string>
+    <string name="Tasks">مهامي</string>
+    <string name="Vote">تقييم التطبيق</string>
+    <string name="high">مهمه عاليه</string>
+    <string name="low">مهمه منخفضه</string>
+    <string name="medium">مهمه متوسطه</string>
+    <string name="prority">الاولويه</string>
+    <string name="title_activity_maps">الخرائط</string>
 
 </resources>

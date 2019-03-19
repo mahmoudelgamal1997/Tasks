@@ -124,7 +124,6 @@ public class FragmentMembers extends Fragment {
 
             final ImageView profileImage=(ImageView)view.findViewById(R.id.user_profile_image);
 
-            //  Glide.with(context).load(img).dontAnimate().into(profileImage).onLoadFailed();
 
             Picasso.with(context).load(img).networkPolicy(NetworkPolicy.OFFLINE).into(profileImage, new Callback() {
                 @Override

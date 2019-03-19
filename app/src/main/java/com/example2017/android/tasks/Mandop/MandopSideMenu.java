@@ -129,6 +129,7 @@ public class MandopSideMenu extends AppCompatActivity
 
 
 
+
         sh= getSharedPreferences("plz",MODE_PRIVATE);
         //get last value
         enable=sh.getBoolean("switch",true);
@@ -264,6 +265,7 @@ public class MandopSideMenu extends AppCompatActivity
         message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                startActivity(new Intent(MandopSideMenu.this, ChatMembers.class));
 
             }
         });
@@ -615,19 +617,23 @@ public class MandopSideMenu extends AppCompatActivity
                 if (name!=null) {
                     txtName.setText(name);
                 }
-                Picasso.with(context).load(img).networkPolicy(NetworkPolicy.OFFLINE).into(imageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
+                if (img!= null) {
 
 
-                    }
+                    Picasso.with(context).load(img).networkPolicy(NetworkPolicy.OFFLINE).into(imageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
 
-                    @Override
-                    public void onError() {
 
-                        Picasso.with(context).load(img).into(imageView);
-                    }
-                });
+                        }
+
+                        @Override
+                        public void onError() {
+
+                            Picasso.with(context).load(img).into(imageView);
+                        }
+                    });
+                }
             }
 
             @Override
@@ -686,20 +692,21 @@ public class MandopSideMenu extends AppCompatActivity
                 final String uri= dataSnapshot.child("ProfileImage").getValue(String.class);
 
 
-                Picasso.with(context).load(uri).networkPolicy(NetworkPolicy.OFFLINE).into(img, new Callback() {
-                    @Override
-                    public void onSuccess() {
+                if (uri!= null) {
+                    Picasso.with(context).load(uri).networkPolicy(NetworkPolicy.OFFLINE).into(img, new Callback() {
+                        @Override
+                        public void onSuccess() {
 
-                    }
+                        }
 
-                    @Override
-                    public void onError() {
+                        @Override
+                        public void onError() {
 
-                        Picasso.with(context).load(uri).into(img);
-                    }
-                });
+                            Picasso.with(context).load(uri).into(img);
+                        }
+                    });
 
-
+                }
 
             }
 
