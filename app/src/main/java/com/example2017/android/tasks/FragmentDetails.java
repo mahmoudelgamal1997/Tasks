@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,8 @@ import com.directions.route.Routing;
 import com.directions.route.RoutingListener;
 import com.example2017.android.tasks.Mandop.MainContract;
 import com.example2017.android.tasks.Mandop.MandopSideMenu;
+import com.example2017.android.tasks.api.APIInterface;
+import com.example2017.android.tasks.api.Tasks;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -39,10 +42,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by M7moud on 10-Nov-18.
@@ -86,38 +96,41 @@ public class FragmentDetails extends Fragment implements RoutingListener {
 
 
 
+        final String number = sh.getString("postion","1");
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(APIInterface.server_url)
+                .addConverterFactory(GsonConverterFactory.create(new Gson())).build();
+        APIInterface service = retrofit.create(APIInterface.class);
+
+        service.getTasks().enqueue(new Callback<Tasks>() {
+            @Override
+            public void onResponse(Call<Tasks> call, Response<Tasks> response) {
+
+                Log.e("notes",response.body().getData().get(Integer.parseInt(number)).getNotes());
+                Log.e("lat",response.body().getData().get(Integer.parseInt(number)).getLatitude());
+                Log.e("lon",response.body().getData().get(Integer.parseInt(number)).getLongitude());
+                Log.e("start",response.body().getData().get(Integer.parseInt(number)).getStartAt());
+
+            }
+
+            @Override
+            public void onFailure(Call<Tasks> call, Throwable t) {
+
+            }
+        });
 
 
 
-        details.child(sh.getString( "data","emputy"  )).addValueEventListener(new ValueEventListener() {
-        @Override
-        public void onDataChange(final DataSnapshot dataSnapshot) {
 
 
-            final String state=dataSnapshot.child("state").getValue(String.class);
-            String TaskDetails=dataSnapshot.child("taskDetails").getValue(String.class);
-           // String adress=dataSnapshot.child("ReportAdress").getValue(String.class);
-            String teamType=dataSnapshot.child("teamType").getValue(String.class);
-            String name=dataSnapshot.child("name").getValue(String.class);
-            final String latitude =dataSnapshot.child("latitude").getValue(String.class);
-            final String longitude =dataSnapshot.child("longitude").getValue(String.class);
-            String TaskDuration=dataSnapshot.child("TaskDuration").getValue(String.class);
-            String TimeFrom=dataSnapshot.child("TimeFrom").getValue(String.class);
-            String TimeTo=dataSnapshot.child("TimeTo").getValue(String.class);
-
-
-
+/*
 
             start=new LatLng(Double.parseDouble(sh.getString("startJourneylat","30")),Double.parseDouble(sh.getString("startJourneylon","30")));
             end = new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude));
 
 
-        //    MandopSideMenu m=new MandopSideMenu();
-
-          //  m.onItemClick(getActivity(),start,end);
-         //   calculateDirections(start,end);
-
-            String number = sh.getString("postion","1");
 
             taskNumber.setText(getString(R.string.task)+number);
             taskDetails.setText(TaskDetails);
@@ -139,6 +152,7 @@ public class FragmentDetails extends Fragment implements RoutingListener {
                     startActivity(i);
                 }
             });
+
 
 
             but.setOnClickListener(new View.OnClickListener() {
@@ -197,14 +211,13 @@ public class FragmentDetails extends Fragment implements RoutingListener {
 
                 }
             });
-        }
 
-    @Override
-    public void onCancelled(DatabaseError databaseError) {
 
-    }
 
-        });
+
+
+
+  */
 
         return view;
     }
