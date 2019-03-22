@@ -20,6 +20,7 @@
     <string name="timeTo">To</string>
     <string name="solo">solo</string>
     <string name="multi">multi</string>
+    <string name="addAttachment"> add Attachment</string>
     <string name="shortTime">short</string>
     <string name="longTime">long</string>
     <string name="title_activity_target_map">target map</string>

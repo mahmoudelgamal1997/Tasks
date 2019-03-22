@@ -23,6 +23,7 @@ import com.example2017.android.tasks.R;
 import com.example2017.android.tasks.api.APIInterface;
 import com.example2017.android.tasks.api.Reports;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.util.Calendar;
 
 import retrofit2.Call;
@@ -43,7 +45,7 @@ public class addTask extends AppCompatActivity implements DatePickerDialog.OnDat
     EditText taskDetails;
     TextView timeFrom, timeTo, txtName;
     SharedPreferences sh;
-    Button ok, pickLocation, startTimer, endTimer;
+    Button ok, pickLocation, startTimer, endTimer,addAttachment;
     String mTeamTypeArray[], mDurationArray[], mProirityArray[];
     String mTeamType = null;
     String mNameSelected;
@@ -56,6 +58,9 @@ public class addTask extends AppCompatActivity implements DatePickerDialog.OnDat
     String CollectionTimeFrom, CollectionTimeTo = "";
     // to know which button selected From or To button
     String buttonSelected = "";
+    File[] AttachmentFile;
+
+    private static final int PICKFILE_RESULT_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,29 +153,6 @@ public class addTask extends AppCompatActivity implements DatePickerDialog.OnDat
         });
 
 
-        /*
-        FirebaseListAdapter<ClientItem> firebaseListAdapter  = new FirebaseListAdapter<ClientItem>(
-                this,
-                ClientItem.class,
-                R.layout.textname,
-                names
-
-        ) {
-            @Override
-            protected void populateView(View v, ClientItem model, int position) {
-
-                TextView txt=(TextView)v.findViewById(R.id.name);
-                txt.setText(model.getName());
-                mNameSelected= model.getName();
-
-
-            }
-        };
-
-        mNameSpinner.setAdapter(firebaseListAdapter);
-
-*/
-
         pickLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -179,6 +161,18 @@ public class addTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
             }
         });
+
+
+        addAttachment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("*/*");
+                startActivityForResult(intent,PICKFILE_RESULT_CODE);
+            }
+        });
+
+
 
 
         startTimer.setOnClickListener(new View.OnClickListener() {
@@ -229,6 +223,18 @@ public class addTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
                 LatLng targetLocation = new LatLng(v1, v2);
 
+
+                addTaskToBackEnd(FirebaseAuth.getInstance().getCurrentUser().getUid(),
+                        String.valueOf(v1),
+                        String.valueOf(v2),
+                        mPrioritySelected,
+                        details,
+                        CollectionTimeFrom,
+                        CollectionTimeTo,
+                        AttachmentFile
+                        );
+
+                /*
                 Mission.Builder mission = new Mission.Builder(sh.getString("MemberKey", "emputy"))
                         .details(details)
                         .getContext(getApplicationContext())
@@ -241,7 +247,11 @@ public class addTask extends AppCompatActivity implements DatePickerDialog.OnDat
                 mission.build();
                 finish();
 
+           */
+
             }
+
+
         });
 
 
@@ -260,6 +270,8 @@ public class addTask extends AppCompatActivity implements DatePickerDialog.OnDat
         pickLocation = (Button) findViewById(R.id.pickLocation);
         startTimer = (Button) findViewById(R.id.startTimer);
         endTimer = (Button) findViewById(R.id.endTimer);
+        addAttachment = (Button) findViewById(R.id.addAttachment);
+
         timeFrom = (TextView) findViewById(R.id.timeFrom);
         timeTo = (TextView) findViewById(R.id.timeTo);
         txtName = (TextView) findViewById(R.id.txt_name);
@@ -314,7 +326,7 @@ public class addTask extends AppCompatActivity implements DatePickerDialog.OnDat
     }
 
 
-    public void addTaskToBackEnd(String userId,String latitude,String longitude,String priority,  String notes, String time) {
+    public void addTaskToBackEnd(String userId, String latitude, String longitude, String priority, String notes, String timeFrom, String timeTo, File[] attachments) {
 
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -323,16 +335,16 @@ public class addTask extends AppCompatActivity implements DatePickerDialog.OnDat
         APIInterface service = retrofit.create(APIInterface.class);
 
 
-        service.SendReqToGetFeedBack("2222", "2112", "12312", "3", "aaa", "1221").enqueue(new retrofit2.Callback<Reports>() {
+        service.SendReqToGetFeedBack("1111","1111","111","1111","1111","8888","solo","111","111",attachments).enqueue(new retrofit2.Callback<Reports>() {
             @Override
             public void onResponse(Call<Reports> call, Response<Reports> response) {
                 try {
-                    Log.e("success", response.body().getData().getNotes());
+                    Log.e("success",  response.body().getMessage());
+                    Log.e("success",  response.body().getStatus().toString());
 
 
                 } catch (Exception e) {
-                    Log.e("Exception", e.getMessage().toString());
-
+                    Log.e("Exception", e.getMessage());
                 }
             }
 
@@ -345,4 +357,20 @@ public class addTask extends AppCompatActivity implements DatePickerDialog.OnDat
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        switch (requestCode){
+            case PICKFILE_RESULT_CODE:
+                if(resultCode==RESULT_OK){
+                     String filePath = data.getData().getPath();
+                     AttachmentFile[0]  = new File(filePath);
+
+                }
+        }
+
+
+    }
 }

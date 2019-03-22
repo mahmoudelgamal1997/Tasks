@@ -88,6 +88,7 @@ public class FragmentDetails extends Fragment implements RoutingListener {
 
 
 
+
         details.child(sh.getString( "data","emputy"  )).addValueEventListener(new ValueEventListener() {
         @Override
         public void onDataChange(final DataSnapshot dataSnapshot) {

@@ -5,14 +5,23 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example2017.android.tasks.api.APIInterface;
+import com.example2017.android.tasks.api.Tasks;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TaskDetailsForMembers extends AppCompatActivity {
 
@@ -29,6 +38,12 @@ public class TaskDetailsForMembers extends AppCompatActivity {
         sh=getApplicationContext().getSharedPreferences("plz", Context.MODE_PRIVATE );
         memberData= FirebaseDatabase.getInstance().getReference().child("Clients").child(sh.getString( "MemberKey","emputy")).child(sh.getString( "MissionKey","emputy"));
 
+
+
+
+
+
+        /*
         memberData.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -63,7 +78,7 @@ public class TaskDetailsForMembers extends AppCompatActivity {
             }
         });
 
-
+*/
     }
 
 
@@ -78,4 +93,29 @@ public void init(){
 
 
 }
+
+
+    public void getData(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(APIInterface.server_url)
+                .addConverterFactory(GsonConverterFactory.create(new Gson())).build();
+        APIInterface service = retrofit.create(APIInterface.class);
+
+        service.getTasks().enqueue(new retrofit2.Callback<Tasks>() {
+            @Override
+            public void onResponse(Call<Tasks> call, Response<Tasks> response) {
+                Log.e("success",response.body().getData().get(0).getNotes());
+                Log.e("success",response.body().getData().get(1).getNotes());
+
+            }
+
+            @Override
+            public void onFailure(Call<Tasks> call, Throwable t) {
+                Log.e("Fail",t.getMessage());
+
+            }
+        });
+    }
+
+
 }

@@ -1,10 +1,11 @@
 
 package com.example2017.android.tasks.api;
 
+import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Reports {
+public class Tasks {
 
     @SerializedName("status")
     @Expose
@@ -14,7 +15,7 @@ public class Reports {
     private String message;
     @SerializedName("data")
     @Expose
-    private Data data;
+    private List<Datum> data = null;
 
     public Integer getStatus() {
         return status;
@@ -32,11 +33,11 @@ public class Reports {
         this.message = message;
     }
 
-    public Data getData() {
+    public List<Datum> getData() {
         return data;
     }
 
-    public void setData(Data data) {
+    public void setData(List<Datum> data) {
         this.data = data;
     }
 

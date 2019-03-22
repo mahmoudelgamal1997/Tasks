@@ -1,53 +1,71 @@
+
 package com.example2017.android.tasks.api;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Data {
+public class Datum {
 
+    @SerializedName("id")
+    @Expose
+    private Integer id;
     @SerializedName("user_id")
     @Expose
     private String userId;
+    @SerializedName("start_at")
+    @Expose
+    private String startAt;
+    @SerializedName("end_at")
+    @Expose
+    private String endAt;
     @SerializedName("time")
     @Expose
     private String time;
+    @SerializedName("priority")
+    @Expose
+    private Integer priority;
     @SerializedName("latitude")
     @Expose
     private String latitude;
     @SerializedName("longitude")
     @Expose
     private String longitude;
-    @SerializedName("priority")
+    @SerializedName("status")
     @Expose
-    private String priority;
+    private Integer status;
     @SerializedName("teamType")
     @Expose
-    private String teamType;
+    private Integer teamType;
     @SerializedName("timeFrom")
     @Expose
     private String timeFrom;
     @SerializedName("timeTo")
     @Expose
     private String timeTo;
-    @SerializedName("updated_at")
+    @SerializedName("cancel_reason")
     @Expose
-    private String updatedAt;
+    private Object cancelReason;
     @SerializedName("created_at")
     @Expose
     private String createdAt;
-    @SerializedName("id")
+    @SerializedName("updated_at")
     @Expose
-    private Integer id;
-    @SerializedName("translations")
-    @Expose
-    private List<Translation> translations = null;
+    private String updatedAt;
     @SerializedName("attachments")
     @Expose
-    private List<Object> attachments = null;
+    private List<Attachment> attachments = null;
     @SerializedName("notes")
     @Expose
     private String notes;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getUserId() {
         return userId;
@@ -57,12 +75,36 @@ public class Data {
         this.userId = userId;
     }
 
+    public String getStartAt() {
+        return startAt;
+    }
+
+    public void setStartAt(String startAt) {
+        this.startAt = startAt;
+    }
+
+    public String getEndAt() {
+        return endAt;
+    }
+
+    public void setEndAt(String endAt) {
+        this.endAt = endAt;
+    }
+
     public String getTime() {
         return time;
     }
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 
     public String getLatitude() {
@@ -81,19 +123,19 @@ public class Data {
         this.longitude = longitude;
     }
 
-    public String getPriority() {
-        return priority;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setPriority(String priority) {
-        this.priority = priority;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
-    public String getTeamType() {
+    public Integer getTeamType() {
         return teamType;
     }
 
-    public void setTeamType(String teamType) {
+    public void setTeamType(Integer teamType) {
         this.teamType = teamType;
     }
 
@@ -113,12 +155,12 @@ public class Data {
         this.timeTo = timeTo;
     }
 
-    public String getUpdatedAt() {
-        return updatedAt;
+    public Object getCancelReason() {
+        return cancelReason;
     }
 
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setCancelReason(Object cancelReason) {
+        this.cancelReason = cancelReason;
     }
 
     public String getCreatedAt() {
@@ -129,27 +171,19 @@ public class Data {
         this.createdAt = createdAt;
     }
 
-    public Integer getId() {
-        return id;
+    public String getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
-    public List<Translation> getTranslations() {
-        return translations;
-    }
-
-    public void setTranslations(List<Translation> translations) {
-        this.translations = translations;
-    }
-
-    public List<Object> getAttachments() {
+    public List<Attachment> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(List<Object> attachments) {
+    public void setAttachments(List<Attachment> attachments) {
         this.attachments = attachments;
     }
 

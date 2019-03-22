@@ -47,6 +47,7 @@ import com.example2017.android.tasks.R;
 import com.example2017.android.tasks.api.APIInterface;
 import com.example2017.android.tasks.Service.Notification;
 import com.example2017.android.tasks.api.Reports;
+import com.example2017.android.tasks.api.Tasks;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -80,7 +81,10 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -710,6 +714,9 @@ public class SideMenu extends AppCompatActivity
         });
 
     }
+
+
+
 
 
 
